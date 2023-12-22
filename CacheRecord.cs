@@ -1,6 +1,7 @@
 using SQLite;
 
 namespace ThemModdingHerds.Resource;
+[Table("cache_record")]
 public class CacheRecord
 {
     [PrimaryKey, AutoIncrement, Column("hiberlite_id")]

@@ -1,6 +1,7 @@
 using SQLite;
 
 namespace ThemModdingHerds.Resource;
+[Table("cached_textfile")]
 public class CachedTextfile
 {
     [PrimaryKey, AutoIncrement, Column("hiberlite_id")]

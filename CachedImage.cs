@@ -1,7 +1,7 @@
 using SQLite;
 
 namespace ThemModdingHerds.Resource;
-
+[Table("cached_image")]
 public class CachedImage
 {
     [Column("height")]
