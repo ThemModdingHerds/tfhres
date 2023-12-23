@@ -17,6 +17,24 @@ public class Database(string path)
     {
         return [.. _conn.Table<CachedTextfile>()];
     }
+    public Database Update(int key,CacheRecord record)
+    {
+        record.HiberliteId = key;
+        _conn.Update(record);
+        return this;
+    }
+    public Database Update(int key,CachedImage image)
+    {
+        image.HiberliteId = key;
+        _conn.Update(image);
+        return this;
+    }
+    public Database Update(int key,CachedTextfile textfile)
+    {
+        textfile.HiberliteId = key;
+        _conn.Update(textfile);
+        return this;
+    }
     public Database Insert(CacheRecord record)
     {
         _conn.Insert(record);
