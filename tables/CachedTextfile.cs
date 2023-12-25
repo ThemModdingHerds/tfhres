@@ -1,11 +1,9 @@
 using SQLite;
 
-namespace ThemModdingHerds.Resource;
+namespace ThemModdingHerds.TFHResource;
 [Table("cached_textfile")]
-public class CachedTextfile
+public class CachedTextfile : HiberliteTable
 {
-    [PrimaryKey, AutoIncrement, Column("hiberlite_id")]
-    public int HiberliteId {get; set;}
     [Column("shortname")]
     public string ShortName {get; set;} = "";
     [Column("source_file")]

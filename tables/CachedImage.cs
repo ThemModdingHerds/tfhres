@@ -1,13 +1,11 @@
 using SQLite;
 
-namespace ThemModdingHerds.Resource;
+namespace ThemModdingHerds.TFHResource;
 [Table("cached_image")]
-public class CachedImage
+public class CachedImage : HiberliteTable
 {
     [Column("height")]
     public int Height {get; set;}
-    [PrimaryKey, AutoIncrement, Column("hiberlite_id")]
-    public int HiberliteId {get; set;}
     [Column("image_data")]
     public byte[] ImageData {get; set;} = [];
     [Column("is_compressed")]
