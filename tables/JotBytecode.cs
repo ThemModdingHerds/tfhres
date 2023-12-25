@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations.Schema;
+using SQLite;
 
 namespace ThemModdingHerds.TFHResource;
 [Table("jot_bytecode")]
