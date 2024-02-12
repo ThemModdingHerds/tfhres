@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "name": "C#: TFHRES.Test",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}\\TFHRES.Test\\TFHRES.Test.csproj",
+            "launchConfigurationId": "TargetFramework=;TFHRES.Test"
+        }
+    ]
+}

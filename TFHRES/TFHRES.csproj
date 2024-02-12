@@ -4,7 +4,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AssemblyName>ThemModdingHerds.$(MSBuildProjectName)</AssemblyName>
-        <Version>1.1.1</Version>
+        <Version>1.2.0</Version>
         <Authors>NightTheFox</Authors>
         <Description>Them's Fightin' Herds .tfhres reader/writer library</Description>
         <PackageProjectUrl>https://github.com/ThemModdingHerds</PackageProjectUrl>
@@ -28,9 +28,6 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
-    </ItemGroup>
-    <ItemGroup>
-        <RuntimeHostConfigurationOption Include="System.Runtime.Loader.UseRidGraph" Value="true" />
+      <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.1" />
     </ItemGroup>
 </Project>

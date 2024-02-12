@@ -1,11 +1,5 @@
-# Them's Fightin' Herds Resource reader/writer
+# ThemModdingHerds.THFRES
 
-A library for reading/writing `.tfhres` files
+[See here for more][real-readme]
 
-## Usage
-
-```c#
-using ThemModdingHerds.Resource;
-
-Database database = new Database(pathToTfhresFile);
-```
+[real-readme]: ./TFHRES/README.md
