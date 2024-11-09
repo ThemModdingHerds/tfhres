@@ -4,22 +4,18 @@ using Microsoft.Data.Sqlite;
 using ThemModdingHerds.TFHResource;
 using ThemModdingHerds.TFHResource.Data;
 
-Database db = new();
-db.Insert(new CacheRecord()
-{
-    Shortname = "memes",
-    SourcePath = "lo/fu/you"
-});
+new Database().Save("test.tfhres",true);
+
+Database db = Database.Open("test.tfhres");
 Database db2 = new();
+
 db2.Insert(new CacheRecord()
 {
-    Shortname = "this record does not exist",
-    SourcePath = "that's true"
+    Shortname = "a",
+    SourcePath = "b"
 });
-db2.Insert(new CacheRecord()
-{
-    Shortname = "haha",
-    SourcePath = "something/aa"
-});
-Database result = db2.Merge(db);
-Console.WriteLine(result.ReadCacheRecord());
+
+Database both = db.Merge(db2);
+db.Close();
+db2.Close();
+both.Save("test.tfhres",true);

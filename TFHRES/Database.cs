@@ -1,10 +1,12 @@
 using System.ComponentModel;
+using System.Data;
 using Microsoft.Data.Sqlite;
 using ThemModdingHerds.TFHResource.Data;
 namespace ThemModdingHerds.TFHResource;
 public class Database : IDisposable, ICloneable
 {
     public SqliteConnection Connection {get;private set;}
+    public ConnectionState State {get => Connection.State;}
     public static Database Open(string path)
     {
         SqliteConnection connection = new($"Data Source={path}");
@@ -24,6 +26,10 @@ public class Database : IDisposable, ICloneable
     public void Dispose()
     {
         GC.SuppressFinalize(this);
+        Close();
+    }
+    public void Close()
+    {
         Connection.Close();
     }
     public object Clone()
@@ -38,8 +44,6 @@ public class Database : IDisposable, ICloneable
     {
         if(File.Exists(path) && !overwrite)
             throw new IOException($"can't save to {path}, database already exists");
-        if(overwrite)
-            File.Delete(path);
         SqliteConnection connection = new($"Data Source={path}");
         Connection.BackupDatabase(connection);
     }
