@@ -4,7 +4,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AssemblyName>ThemModdingHerds.$(MSBuildProjectName)</AssemblyName>
-        <Version>1.3.5</Version>
+        <Version>1.3.6</Version>
         <Authors>NightTheFox</Authors>
         <Description>Them's Fightin' Herds .tfhres reader/writer library</Description>
         <PackageProjectUrl>https://github.com/ThemModdingHerds</PackageProjectUrl>

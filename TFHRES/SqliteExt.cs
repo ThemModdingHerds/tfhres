@@ -4,7 +4,12 @@ using Microsoft.Data.Sqlite;
 namespace ThemModdingHerds.TFHResource;
 public static class SqliteExt
 {
-    public static T GetValue<T>(this SqliteDataReader reader,string name,T defaultValue) => reader.GetFieldValue<T>(name) ?? defaultValue;
+    public static T GetValue<T>(this SqliteDataReader reader,string name,T defaultValue)
+    {
+        if(reader.IsDBNull(name))
+            return defaultValue;
+        return reader.GetFieldValue<T>(name) ?? defaultValue;
+    }
     public static long GetHiberliteId(this SqliteDataReader reader) => GetInteger(reader,"hiberlite_id");
     public static string GetText(this SqliteDataReader reader,string name) => GetValue(reader,name,string.Empty);
     public static long GetInteger(this SqliteDataReader reader,string name) => GetValue(reader,name,-1L);
