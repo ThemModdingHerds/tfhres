@@ -6,12 +6,12 @@ namespace ThemModdingHerds.TFHResource.Data;
 public class TmxMapInstanceLayersItemsItemAnimationsItems
 {
     public const string TABLE_NAME = "tmx_map_instance_layers_items_item_animations_items";
-    public const string CREATE_TABLE_COMMAND = "CREATE TABLE tmx_map_instance_layers_items_item_animations_items (hiberlite_entry_indx INTEGER, hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, hiberlite_parent_id INTEGER, item_max_frames INTEGER, item_munged_frames INTEGER, item_starting_vertex INTEGER, item_ticks_per_frame INTEGER)";
+    public const string CREATE_TABLE_COMMAND = "CREATE TABLE tmx_map_instance_layers_items_item_animations_items (hiberlite_entry_indx INTEGER, hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, hiberlite_parent_id INTEGER, item_max_frames INTEGER, item_munged_frames BLOB, item_starting_vertex INTEGER, item_ticks_per_frame INTEGER)";
     public long HiberliteEntryIndx {get; set;}
     public long HiberliteId {get; set;}
     public long HiberliteParentId {get; set;}
     public long ItemMaxFrames {get; set;}
-    public long ItemMungedFrames {get; set;}
+    public byte[] ItemMungedFrames {get; set;} = [];
     public long ItemStartingVertex {get; set;}
     public long ItemTicksPerFrame {get; set;}
 }
@@ -81,7 +81,7 @@ public static class TmxMapInstanceLayersItemsItemAnimationsItemsExt
                     HiberliteId = reader.GetInteger("hiberlite_id"),
                     HiberliteParentId = reader.GetInteger("hiberlite_parent_id"),
                     ItemMaxFrames = reader.GetInteger("item_max_frames"),
-                    ItemMungedFrames = reader.GetInteger("item_munged_frames"),
+                    ItemMungedFrames = reader.GetBlob("item_munged_frames"),
                     ItemStartingVertex = reader.GetInteger("item_starting_vertex"),
                     ItemTicksPerFrame = reader.GetInteger("item_ticks_per_frame")
                 }
@@ -103,7 +103,7 @@ public static class TmxMapInstanceLayersItemsItemAnimationsItemsExt
                 HiberliteId = reader.GetInteger("hiberlite_id"),
                 HiberliteParentId = reader.GetInteger("hiberlite_parent_id"),
                 ItemMaxFrames = reader.GetInteger("item_max_frames"),
-                ItemMungedFrames = reader.GetInteger("item_munged_frames"),
+                ItemMungedFrames = reader.GetBlob("item_munged_frames"),
                 ItemStartingVertex = reader.GetInteger("item_starting_vertex"),
                 ItemTicksPerFrame = reader.GetInteger("item_ticks_per_frame")
             };

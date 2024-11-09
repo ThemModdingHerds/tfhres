@@ -6,13 +6,13 @@ namespace ThemModdingHerds.TFHResource.Data;
 public class TmxMapInstanceLayersItems
 {
     public const string TABLE_NAME = "tmx_map_instance_layers_items";
-    public const string CREATE_TABLE_COMMAND = "CREATE TABLE tmx_map_instance_layers_items (hiberlite_entry_indx INTEGER, hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, hiberlite_parent_id INTEGER, item_depth INTEGER, item_draw_layer INTEGER, item_layer_id INTEGER, item_layer_name TEXT, item_num_verticies INTEGER, item_tileset_image_shortname TEXT, item_vertex_data BLOB)";
+    public const string CREATE_TABLE_COMMAND = "CREATE TABLE tmx_map_instance_layers_items (hiberlite_entry_indx INTEGER, hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, hiberlite_parent_id INTEGER, item_depth INTEGER, item_draw_layer INTEGER, item_layer_id TEXT, item_layer_name TEXT, item_num_verticies INTEGER, item_tileset_image_shortname TEXT, item_vertex_data BLOB)";
     public long HiberliteEntryIndx {get; set;}
     public long HiberliteId {get; set;}
     public long HiberliteParentId {get; set;}
     public long ItemDepth {get; set;}
     public long ItemDrawLayer {get; set;}
-    public long ItemLayerId {get; set;}
+    public string ItemLayerId {get; set;} = string.Empty;
     public string ItemLayerName {get; set;} = string.Empty;
     public long ItemNumVerticies {get; set;}
     public string ItemTilesetImageShortname {get; set;} = string.Empty;
@@ -91,7 +91,7 @@ public static class TmxMapInstanceLayersItemsExt
                     HiberliteParentId = reader.GetInteger("hiberlite_parent_id"),
                     ItemDepth = reader.GetInteger("item_depth"),
                     ItemDrawLayer = reader.GetInteger("item_draw_layer"),
-                    ItemLayerId = reader.GetInteger("item_layer_id"),
+                    ItemLayerId = reader.GetText("item_layer_id"),
                     ItemLayerName = reader.GetText("item_layer_name"),
                     ItemNumVerticies = reader.GetInteger("item_num_verticies"),
                     ItemTilesetImageShortname = reader.GetText("item_tileset_image_shortname"),
@@ -116,7 +116,7 @@ public static class TmxMapInstanceLayersItemsExt
                 HiberliteParentId = reader.GetInteger("hiberlite_parent_id"),
                 ItemDepth = reader.GetInteger("item_depth"),
                 ItemDrawLayer = reader.GetInteger("item_draw_layer"),
-                ItemLayerId = reader.GetInteger("item_layer_id"),
+                ItemLayerId = reader.GetText("item_layer_id"),
                 ItemLayerName = reader.GetText("item_layer_name"),
                 ItemNumVerticies = reader.GetInteger("item_num_verticies"),
                 ItemTilesetImageShortname = reader.GetText("item_tileset_image_shortname"),

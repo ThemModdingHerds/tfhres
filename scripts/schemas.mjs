@@ -116,7 +116,7 @@ export const schemas = [
         .addField("hiberlite_parent_id", "INTEGER")
         .addField("item_depth", "INTEGER")
         .addField("item_draw_layer", "INTEGER")
-        .addField("item_layer_id","INTEGER")
+        .addField("item_layer_id","TEXT")
         .addField("item_layer_name", "TEXT")
         .addField("item_num_verticies", "INTEGER")
         .addField("item_tileset_image_shortname", "TEXT")
@@ -126,7 +126,7 @@ export const schemas = [
         .addField("hiberlite_id", "INTEGER", ["PRIMARY KEY", "AUTOINCREMENT"])
         .addField("hiberlite_parent_id", "INTEGER")
         .addField("item_max_frames", "INTEGER")
-        .addField("item_munged_frames", "INTEGER")
+        .addField("item_munged_frames", "BLOB")
         .addField("item_starting_vertex", "INTEGER")
         .addField("item_ticks_per_frame", "INTEGER"),
     new Schema("varstate")
