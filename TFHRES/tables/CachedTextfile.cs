@@ -1,9 +1,12 @@
+// generated code. DO NOT MODIFY (see scripts/create-table.mjs in source code)
+using System.Data;
 using Microsoft.Data.Sqlite;
 
 namespace ThemModdingHerds.TFHResource.Data;
 public class CachedTextfile
 {
     public const string TABLE_NAME = "cached_textfile";
+    public const string CREATE_TABLE_COMMAND = "CREATE TABLE cached_textfile (hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, shortname TEXT, source_file TEXT, text_data BLOB)";
     public long HiberliteId {get; set;}
     public string Shortname {get; set;} = string.Empty;
     public string SourceFile {get; set;} = string.Empty;
@@ -25,6 +28,20 @@ public static class CachedTextfileExt
         foreach(CachedTextfile cached_textfile in items)
             Insert(database,cached_textfile);
     }
+    public static void Upsert(this Database database,CachedTextfile cached_textfile)
+    {
+        if(ExistsCachedTextfile(database,cached_textfile))
+        {
+            Update(database,cached_textfile);
+            return;
+        }
+        Insert(database,cached_textfile);
+    }
+    public static void Upsert(this Database database,IEnumerable<CachedTextfile> items)
+    {
+        foreach(CachedTextfile cached_textfile in items)
+            Upsert(database,cached_textfile);
+    }
     public static void Update(this Database database,CachedTextfile cached_textfile)
     {
         SqliteCommand cmd = database.Connection.CreateCommand();
@@ -34,6 +51,11 @@ public static class CachedTextfileExt
         cmd.Parameters.AddWithValue("$source_file",cached_textfile.SourceFile);
         cmd.Parameters.AddWithValue("$text_data",cached_textfile.TextData);
         cmd.ExecuteNonQuery();
+    }
+    public static void Update(this Database database,IEnumerable<CachedTextfile> items)
+    {
+        foreach(CachedTextfile item in items)
+            Update(database,item);
     }
     public static List<CachedTextfile> ReadCachedTextfile(this Database database)
     {
@@ -53,6 +75,49 @@ public static class CachedTextfileExt
                 }
             );
         }
+        items.Sort((a,b) => (int)(a.HiberliteId - b.HiberliteId));
         return items;
+    }
+    public static CachedTextfile? ReadCachedTextfile(this Database database,long hiberlite_id)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"SELECT * FROM {CachedTextfile.TABLE_NAME} WHERE hiberlite_id = $hiberlite_id;";
+        cmd.Parameters.AddWithValue("$hiberlite_id",hiberlite_id);
+        using SqliteDataReader reader = cmd.ExecuteReader();
+        if(reader.Read())
+            return new CachedTextfile()
+            {
+                HiberliteId = reader.GetInteger("hiberlite_id"),
+                Shortname = reader.GetText("shortname"),
+                SourceFile = reader.GetText("source_file"),
+                TextData = reader.GetBlob("text_data")
+            };
+        return null;
+    }
+    public static bool ExistsCachedTextfile(this Database database,long hiberlite_id)
+    {
+        return ReadCachedTextfile(database,hiberlite_id) != null;
+    }
+    public static bool ExistsCachedTextfile(this Database database,CachedTextfile cached_textfile)
+    {
+        return ExistsCachedTextfile(database,cached_textfile.HiberliteId);
+    }
+    public static void DeleteCachedTextfile(this Database database,long hiberlite_id)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"DELETE FROM {CachedTextfile.TABLE_NAME} WHERE hiberlite_id = $hiberlite_id;";
+        cmd.Parameters.AddWithValue("$hiberlite_id",hiberlite_id);
+        cmd.ExecuteNonQuery();
+    }
+    public static void DeleteCachedTextfile(this Database database,IEnumerable<long> hiberlite_ids)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"DELETE FROM {CachedTextfile.TABLE_NAME} WHERE hiberlite_id = $hiberlite_id;";
+        foreach(long hiberlite_id in hiberlite_ids)
+        {
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("$hiberlite_id",hiberlite_id);
+            cmd.ExecuteNonQuery();
+        }
     }
 }

@@ -1,27 +1,25 @@
-﻿using System.Text;
+﻿using System.Data;
+using System.Text;
 using Microsoft.Data.Sqlite;
 using ThemModdingHerds.TFHResource;
 using ThemModdingHerds.TFHResource.Data;
 
-/*if (args.Length != 1)
+Database db = new();
+db.Insert(new CacheRecord()
 {
-    Console.WriteLine("usage: THFRES.Test.exe <*.tfhres>");
-    Environment.Exit(1);
-}
-string path = args[0]
-*/
-string path = "G:\\SteamLibrary\\steamapps\\common\\Them's Fightin' Herds\\Scripts\\src\\Farm\\resources\\resources_prod.tfhres";
-if(!File.Exists(path))
-    throw new FileNotFoundException($"{path} does not exist");
-Database database = new(path);
-
-database.Open();
-
-CachedTextfile textfile = new()
+    Shortname = "memes",
+    SourcePath = "lo/fu/you"
+});
+Database db2 = new();
+db2.Insert(new CacheRecord()
 {
-    Shortname = "deez nuts",
-    SourceFile = "very/cool/path",
-    TextData = Encoding.UTF8.GetBytes("hah, gottem")
-};
-
-database.Insert(textfile);
+    Shortname = "this record does not exist",
+    SourcePath = "that's true"
+});
+db2.Insert(new CacheRecord()
+{
+    Shortname = "haha",
+    SourcePath = "something/aa"
+});
+Database result = db2.Merge(db);
+Console.WriteLine(result.ReadCacheRecord());

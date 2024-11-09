@@ -4,7 +4,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AssemblyName>ThemModdingHerds.$(MSBuildProjectName)</AssemblyName>
-        <Version>1.2.0</Version>
+        <Version>1.3.1</Version>
         <Authors>NightTheFox</Authors>
         <Description>Them's Fightin' Herds .tfhres reader/writer library</Description>
         <PackageProjectUrl>https://github.com/ThemModdingHerds</PackageProjectUrl>
@@ -16,6 +16,7 @@
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <PackageTags>tfhres;tfh;themsfightinherds;reader;writer;io;sqlite;sqlite3</PackageTags>
+        <RootNamespace>ThemModdingHerds.TFHResource</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
         <None Update="README.md">
@@ -28,6 +29,8 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.1" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.10" />
     </ItemGroup>
 </Project>

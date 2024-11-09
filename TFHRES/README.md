@@ -10,16 +10,12 @@ A library for reading/writing `.tfhres` files from Them's Fightin' Herds
 using ThemModdingHerds.Resource;
 using ThemModdingHerds.Resource.Data;
 
-Database database = new Database(pathToTfhresFile);
-
-// required for any actions
-database.Open();
+Database database = Database.Open(pathToTfhresFile);
 
 // get all CachedImage records
 List<CachedImage> images = database.ReadCachedImage();
-
-// don't forget to close afterwards
-database.Close();
+// read the 20th CachedImage (might return null if the item does not exist)
+CacheImage? image = database.ReadCachedImage(20);
 ```
 
 ### Updating items
@@ -28,19 +24,15 @@ database.Close();
 using ThemModdingHerds.Resource;
 using ThemModdingHerds.Resource.Data;
 
-Database database = new Database(pathToTfhresFile);
+Database database = Database.Open(pathToTfhresFile);
 
-// required for any actions
-database.Open();
-
-// imagine we got this CachedImage "image" from "database.ReadCachedImage()"
+// imagine we got this CachedImage "image" from "database.ReadCachedImage(long)" and it's not null
 
 image.Height = 100; // Change property
 
-database.Update(image);
-
-// don't forget to close afterwards
-database.Close();
+database.Update(image); // update one item
+database.Update(images); // update a list of items (images is a IEnumable)
+database.Upsert(image); // updates if item with same id exists otherwise adds the item
 ```
 
 ### Adding new item(s)
@@ -49,10 +41,7 @@ database.Close();
 using ThemModdingHerds.Resource;
 using ThemModdingHerds.Resource.Data;
 
-Database database = new Database(pathToTfhresFile);
-
-// required for any actions
-database.Open();
+Database database = Database.Open(pathToTfhresFile);
 
 // the HiberliteId property isn't required
 CachedTextfile textfile = new()
@@ -64,7 +53,10 @@ CachedTextfile textfile = new()
 
 // add item to databse. this also be a list of the same item type
 database.Insert(textfile);
+```
 
-// don't forget to close afterwards
-database.Close();
+### Merge Databases
+
+```c#
+Database result = database.Merge(otherDatabase); // keep in mind it returns a new database, it does not modify the variable
 ```

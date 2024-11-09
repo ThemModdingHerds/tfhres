@@ -1,9 +1,12 @@
+// generated code. DO NOT MODIFY (see scripts/create-table.mjs in source code)
+using System.Data;
 using Microsoft.Data.Sqlite;
 
 namespace ThemModdingHerds.TFHResource.Data;
 public class InkBytecode
 {
     public const string TABLE_NAME = "ink_bytecode";
+    public const string CREATE_TABLE_COMMAND = "CREATE TABLE ink_bytecode (bytecode TEXT, hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, mapname TEXT, shortname TEXT, source_file TEXT)";
     public string Bytecode {get; set;} = string.Empty;
     public long HiberliteId {get; set;}
     public string Mapname {get; set;} = string.Empty;
@@ -27,6 +30,20 @@ public static class InkBytecodeExt
         foreach(InkBytecode ink_bytecode in items)
             Insert(database,ink_bytecode);
     }
+    public static void Upsert(this Database database,InkBytecode ink_bytecode)
+    {
+        if(ExistsInkBytecode(database,ink_bytecode))
+        {
+            Update(database,ink_bytecode);
+            return;
+        }
+        Insert(database,ink_bytecode);
+    }
+    public static void Upsert(this Database database,IEnumerable<InkBytecode> items)
+    {
+        foreach(InkBytecode ink_bytecode in items)
+            Upsert(database,ink_bytecode);
+    }
     public static void Update(this Database database,InkBytecode ink_bytecode)
     {
         SqliteCommand cmd = database.Connection.CreateCommand();
@@ -37,6 +54,11 @@ public static class InkBytecodeExt
         cmd.Parameters.AddWithValue("$shortname",ink_bytecode.Shortname);
         cmd.Parameters.AddWithValue("$source_file",ink_bytecode.SourceFile);
         cmd.ExecuteNonQuery();
+    }
+    public static void Update(this Database database,IEnumerable<InkBytecode> items)
+    {
+        foreach(InkBytecode item in items)
+            Update(database,item);
     }
     public static List<InkBytecode> ReadInkBytecode(this Database database)
     {
@@ -57,6 +79,50 @@ public static class InkBytecodeExt
                 }
             );
         }
+        items.Sort((a,b) => (int)(a.HiberliteId - b.HiberliteId));
         return items;
+    }
+    public static InkBytecode? ReadInkBytecode(this Database database,long hiberlite_id)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"SELECT * FROM {InkBytecode.TABLE_NAME} WHERE hiberlite_id = $hiberlite_id;";
+        cmd.Parameters.AddWithValue("$hiberlite_id",hiberlite_id);
+        using SqliteDataReader reader = cmd.ExecuteReader();
+        if(reader.Read())
+            return new InkBytecode()
+            {
+                Bytecode = reader.GetText("bytecode"),
+                HiberliteId = reader.GetInteger("hiberlite_id"),
+                Mapname = reader.GetText("mapname"),
+                Shortname = reader.GetText("shortname"),
+                SourceFile = reader.GetText("source_file")
+            };
+        return null;
+    }
+    public static bool ExistsInkBytecode(this Database database,long hiberlite_id)
+    {
+        return ReadInkBytecode(database,hiberlite_id) != null;
+    }
+    public static bool ExistsInkBytecode(this Database database,InkBytecode ink_bytecode)
+    {
+        return ExistsInkBytecode(database,ink_bytecode.HiberliteId);
+    }
+    public static void DeleteInkBytecode(this Database database,long hiberlite_id)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"DELETE FROM {InkBytecode.TABLE_NAME} WHERE hiberlite_id = $hiberlite_id;";
+        cmd.Parameters.AddWithValue("$hiberlite_id",hiberlite_id);
+        cmd.ExecuteNonQuery();
+    }
+    public static void DeleteInkBytecode(this Database database,IEnumerable<long> hiberlite_ids)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"DELETE FROM {InkBytecode.TABLE_NAME} WHERE hiberlite_id = $hiberlite_id;";
+        foreach(long hiberlite_id in hiberlite_ids)
+        {
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("$hiberlite_id",hiberlite_id);
+            cmd.ExecuteNonQuery();
+        }
     }
 }

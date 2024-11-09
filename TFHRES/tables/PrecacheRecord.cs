@@ -1,9 +1,12 @@
+// generated code. DO NOT MODIFY (see scripts/create-table.mjs in source code)
+using System.Data;
 using Microsoft.Data.Sqlite;
 
 namespace ThemModdingHerds.TFHResource.Data;
 public class PrecacheRecord
 {
     public const string TABLE_NAME = "precache_record";
+    public const string CREATE_TABLE_COMMAND = "CREATE TABLE precache_record (hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, mapname TEXT, shortname TEXT, type INTEGER)";
     public long HiberliteId {get; set;}
     public string Mapname {get; set;} = string.Empty;
     public string Shortname {get; set;} = string.Empty;
@@ -25,6 +28,20 @@ public static class PrecacheRecordExt
         foreach(PrecacheRecord precache_record in items)
             Insert(database,precache_record);
     }
+    public static void Upsert(this Database database,PrecacheRecord precache_record)
+    {
+        if(ExistsPrecacheRecord(database,precache_record))
+        {
+            Update(database,precache_record);
+            return;
+        }
+        Insert(database,precache_record);
+    }
+    public static void Upsert(this Database database,IEnumerable<PrecacheRecord> items)
+    {
+        foreach(PrecacheRecord precache_record in items)
+            Upsert(database,precache_record);
+    }
     public static void Update(this Database database,PrecacheRecord precache_record)
     {
         SqliteCommand cmd = database.Connection.CreateCommand();
@@ -34,6 +51,11 @@ public static class PrecacheRecordExt
         cmd.Parameters.AddWithValue("$shortname",precache_record.Shortname);
         cmd.Parameters.AddWithValue("$type",precache_record.Type);
         cmd.ExecuteNonQuery();
+    }
+    public static void Update(this Database database,IEnumerable<PrecacheRecord> items)
+    {
+        foreach(PrecacheRecord item in items)
+            Update(database,item);
     }
     public static List<PrecacheRecord> ReadPrecacheRecord(this Database database)
     {
@@ -53,6 +75,49 @@ public static class PrecacheRecordExt
                 }
             );
         }
+        items.Sort((a,b) => (int)(a.HiberliteId - b.HiberliteId));
         return items;
+    }
+    public static PrecacheRecord? ReadPrecacheRecord(this Database database,long hiberlite_id)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"SELECT * FROM {PrecacheRecord.TABLE_NAME} WHERE hiberlite_id = $hiberlite_id;";
+        cmd.Parameters.AddWithValue("$hiberlite_id",hiberlite_id);
+        using SqliteDataReader reader = cmd.ExecuteReader();
+        if(reader.Read())
+            return new PrecacheRecord()
+            {
+                HiberliteId = reader.GetInteger("hiberlite_id"),
+                Mapname = reader.GetText("mapname"),
+                Shortname = reader.GetText("shortname"),
+                Type = reader.GetInteger("type")
+            };
+        return null;
+    }
+    public static bool ExistsPrecacheRecord(this Database database,long hiberlite_id)
+    {
+        return ReadPrecacheRecord(database,hiberlite_id) != null;
+    }
+    public static bool ExistsPrecacheRecord(this Database database,PrecacheRecord precache_record)
+    {
+        return ExistsPrecacheRecord(database,precache_record.HiberliteId);
+    }
+    public static void DeletePrecacheRecord(this Database database,long hiberlite_id)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"DELETE FROM {PrecacheRecord.TABLE_NAME} WHERE hiberlite_id = $hiberlite_id;";
+        cmd.Parameters.AddWithValue("$hiberlite_id",hiberlite_id);
+        cmd.ExecuteNonQuery();
+    }
+    public static void DeletePrecacheRecord(this Database database,IEnumerable<long> hiberlite_ids)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"DELETE FROM {PrecacheRecord.TABLE_NAME} WHERE hiberlite_id = $hiberlite_id;";
+        foreach(long hiberlite_id in hiberlite_ids)
+        {
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("$hiberlite_id",hiberlite_id);
+            cmd.ExecuteNonQuery();
+        }
     }
 }

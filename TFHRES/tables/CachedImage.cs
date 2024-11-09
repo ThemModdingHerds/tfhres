@@ -1,9 +1,12 @@
+// generated code. DO NOT MODIFY (see scripts/create-table.mjs in source code)
+using System.Data;
 using Microsoft.Data.Sqlite;
 
 namespace ThemModdingHerds.TFHResource.Data;
 public class CachedImage
 {
     public const string TABLE_NAME = "cached_image";
+    public const string CREATE_TABLE_COMMAND = "CREATE TABLE cached_image (height INTEGER, hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, image_data BLOB, is_compressed INTEGER, shortname TEXT, vram_only INTEGER, width INTEGER)";
     public long Height {get; set;}
     public long HiberliteId {get; set;}
     public byte[] ImageData {get; set;} = [];
@@ -31,6 +34,20 @@ public static class CachedImageExt
         foreach(CachedImage cached_image in items)
             Insert(database,cached_image);
     }
+    public static void Upsert(this Database database,CachedImage cached_image)
+    {
+        if(ExistsCachedImage(database,cached_image))
+        {
+            Update(database,cached_image);
+            return;
+        }
+        Insert(database,cached_image);
+    }
+    public static void Upsert(this Database database,IEnumerable<CachedImage> items)
+    {
+        foreach(CachedImage cached_image in items)
+            Upsert(database,cached_image);
+    }
     public static void Update(this Database database,CachedImage cached_image)
     {
         SqliteCommand cmd = database.Connection.CreateCommand();
@@ -43,6 +60,11 @@ public static class CachedImageExt
         cmd.Parameters.AddWithValue("$vram_only",cached_image.VramOnly);
         cmd.Parameters.AddWithValue("$width",cached_image.Width);
         cmd.ExecuteNonQuery();
+    }
+    public static void Update(this Database database,IEnumerable<CachedImage> items)
+    {
+        foreach(CachedImage item in items)
+            Update(database,item);
     }
     public static List<CachedImage> ReadCachedImage(this Database database)
     {
@@ -65,6 +87,52 @@ public static class CachedImageExt
                 }
             );
         }
+        items.Sort((a,b) => (int)(a.HiberliteId - b.HiberliteId));
         return items;
+    }
+    public static CachedImage? ReadCachedImage(this Database database,long hiberlite_id)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"SELECT * FROM {CachedImage.TABLE_NAME} WHERE hiberlite_id = $hiberlite_id;";
+        cmd.Parameters.AddWithValue("$hiberlite_id",hiberlite_id);
+        using SqliteDataReader reader = cmd.ExecuteReader();
+        if(reader.Read())
+            return new CachedImage()
+            {
+                Height = reader.GetInteger("height"),
+                HiberliteId = reader.GetInteger("hiberlite_id"),
+                ImageData = reader.GetBlob("image_data"),
+                IsCompressed = reader.GetInteger("is_compressed"),
+                Shortname = reader.GetText("shortname"),
+                VramOnly = reader.GetInteger("vram_only"),
+                Width = reader.GetInteger("width")
+            };
+        return null;
+    }
+    public static bool ExistsCachedImage(this Database database,long hiberlite_id)
+    {
+        return ReadCachedImage(database,hiberlite_id) != null;
+    }
+    public static bool ExistsCachedImage(this Database database,CachedImage cached_image)
+    {
+        return ExistsCachedImage(database,cached_image.HiberliteId);
+    }
+    public static void DeleteCachedImage(this Database database,long hiberlite_id)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"DELETE FROM {CachedImage.TABLE_NAME} WHERE hiberlite_id = $hiberlite_id;";
+        cmd.Parameters.AddWithValue("$hiberlite_id",hiberlite_id);
+        cmd.ExecuteNonQuery();
+    }
+    public static void DeleteCachedImage(this Database database,IEnumerable<long> hiberlite_ids)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"DELETE FROM {CachedImage.TABLE_NAME} WHERE hiberlite_id = $hiberlite_id;";
+        foreach(long hiberlite_id in hiberlite_ids)
+        {
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("$hiberlite_id",hiberlite_id);
+            cmd.ExecuteNonQuery();
+        }
     }
 }

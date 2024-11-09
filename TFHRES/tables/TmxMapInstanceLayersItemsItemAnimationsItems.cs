@@ -1,9 +1,12 @@
+// generated code. DO NOT MODIFY (see scripts/create-table.mjs in source code)
+using System.Data;
 using Microsoft.Data.Sqlite;
 
 namespace ThemModdingHerds.TFHResource.Data;
 public class TmxMapInstanceLayersItemsItemAnimationsItems
 {
     public const string TABLE_NAME = "tmx_map_instance_layers_items_item_animations_items";
+    public const string CREATE_TABLE_COMMAND = "CREATE TABLE tmx_map_instance_layers_items_item_animations_items (hiberlite_entry_indx INTEGER, hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, hiberlite_parent_id INTEGER, item_max_frames INTEGER, item_munged_frames INTEGER, item_starting_vertex INTEGER, item_ticks_per_frame INTEGER)";
     public long HiberliteEntryIndx {get; set;}
     public long HiberliteId {get; set;}
     public long HiberliteParentId {get; set;}
@@ -31,6 +34,20 @@ public static class TmxMapInstanceLayersItemsItemAnimationsItemsExt
         foreach(TmxMapInstanceLayersItemsItemAnimationsItems tmx_map_instance_layers_items_item_animations_items in items)
             Insert(database,tmx_map_instance_layers_items_item_animations_items);
     }
+    public static void Upsert(this Database database,TmxMapInstanceLayersItemsItemAnimationsItems tmx_map_instance_layers_items_item_animations_items)
+    {
+        if(ExistsTmxMapInstanceLayersItemsItemAnimationsItems(database,tmx_map_instance_layers_items_item_animations_items))
+        {
+            Update(database,tmx_map_instance_layers_items_item_animations_items);
+            return;
+        }
+        Insert(database,tmx_map_instance_layers_items_item_animations_items);
+    }
+    public static void Upsert(this Database database,IEnumerable<TmxMapInstanceLayersItemsItemAnimationsItems> items)
+    {
+        foreach(TmxMapInstanceLayersItemsItemAnimationsItems tmx_map_instance_layers_items_item_animations_items in items)
+            Upsert(database,tmx_map_instance_layers_items_item_animations_items);
+    }
     public static void Update(this Database database,TmxMapInstanceLayersItemsItemAnimationsItems tmx_map_instance_layers_items_item_animations_items)
     {
         SqliteCommand cmd = database.Connection.CreateCommand();
@@ -43,6 +60,11 @@ public static class TmxMapInstanceLayersItemsItemAnimationsItemsExt
         cmd.Parameters.AddWithValue("$item_starting_vertex",tmx_map_instance_layers_items_item_animations_items.ItemStartingVertex);
         cmd.Parameters.AddWithValue("$item_ticks_per_frame",tmx_map_instance_layers_items_item_animations_items.ItemTicksPerFrame);
         cmd.ExecuteNonQuery();
+    }
+    public static void Update(this Database database,IEnumerable<TmxMapInstanceLayersItemsItemAnimationsItems> items)
+    {
+        foreach(TmxMapInstanceLayersItemsItemAnimationsItems item in items)
+            Update(database,item);
     }
     public static List<TmxMapInstanceLayersItemsItemAnimationsItems> ReadTmxMapInstanceLayersItemsItemAnimationsItems(this Database database)
     {
@@ -65,6 +87,52 @@ public static class TmxMapInstanceLayersItemsItemAnimationsItemsExt
                 }
             );
         }
+        items.Sort((a,b) => (int)(a.HiberliteId - b.HiberliteId));
         return items;
+    }
+    public static TmxMapInstanceLayersItemsItemAnimationsItems? ReadTmxMapInstanceLayersItemsItemAnimationsItems(this Database database,long hiberlite_id)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"SELECT * FROM {TmxMapInstanceLayersItemsItemAnimationsItems.TABLE_NAME} WHERE hiberlite_id = $hiberlite_id;";
+        cmd.Parameters.AddWithValue("$hiberlite_id",hiberlite_id);
+        using SqliteDataReader reader = cmd.ExecuteReader();
+        if(reader.Read())
+            return new TmxMapInstanceLayersItemsItemAnimationsItems()
+            {
+                HiberliteEntryIndx = reader.GetInteger("hiberlite_entry_indx"),
+                HiberliteId = reader.GetInteger("hiberlite_id"),
+                HiberliteParentId = reader.GetInteger("hiberlite_parent_id"),
+                ItemMaxFrames = reader.GetInteger("item_max_frames"),
+                ItemMungedFrames = reader.GetInteger("item_munged_frames"),
+                ItemStartingVertex = reader.GetInteger("item_starting_vertex"),
+                ItemTicksPerFrame = reader.GetInteger("item_ticks_per_frame")
+            };
+        return null;
+    }
+    public static bool ExistsTmxMapInstanceLayersItemsItemAnimationsItems(this Database database,long hiberlite_id)
+    {
+        return ReadTmxMapInstanceLayersItemsItemAnimationsItems(database,hiberlite_id) != null;
+    }
+    public static bool ExistsTmxMapInstanceLayersItemsItemAnimationsItems(this Database database,TmxMapInstanceLayersItemsItemAnimationsItems tmx_map_instance_layers_items_item_animations_items)
+    {
+        return ExistsTmxMapInstanceLayersItemsItemAnimationsItems(database,tmx_map_instance_layers_items_item_animations_items.HiberliteId);
+    }
+    public static void DeleteTmxMapInstanceLayersItemsItemAnimationsItems(this Database database,long hiberlite_id)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"DELETE FROM {TmxMapInstanceLayersItemsItemAnimationsItems.TABLE_NAME} WHERE hiberlite_id = $hiberlite_id;";
+        cmd.Parameters.AddWithValue("$hiberlite_id",hiberlite_id);
+        cmd.ExecuteNonQuery();
+    }
+    public static void DeleteTmxMapInstanceLayersItemsItemAnimationsItems(this Database database,IEnumerable<long> hiberlite_ids)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"DELETE FROM {TmxMapInstanceLayersItemsItemAnimationsItems.TABLE_NAME} WHERE hiberlite_id = $hiberlite_id;";
+        foreach(long hiberlite_id in hiberlite_ids)
+        {
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("$hiberlite_id",hiberlite_id);
+            cmd.ExecuteNonQuery();
+        }
     }
 }

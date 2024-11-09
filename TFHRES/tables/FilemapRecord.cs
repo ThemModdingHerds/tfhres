@@ -1,9 +1,12 @@
+// generated code. DO NOT MODIFY (see scripts/create-table.mjs in source code)
+using System.Data;
 using Microsoft.Data.Sqlite;
 
 namespace ThemModdingHerds.TFHResource.Data;
 public class FilemapRecord
 {
     public const string TABLE_NAME = "filemap_record";
+    public const string CREATE_TABLE_COMMAND = "CREATE TABLE filemap_record (hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, shortname TEXT, source_path TEXT, type TEXT)";
     public long HiberliteId {get; set;}
     public string Shortname {get; set;} = string.Empty;
     public string SourcePath {get; set;} = string.Empty;
@@ -25,6 +28,20 @@ public static class FilemapRecordExt
         foreach(FilemapRecord filemap_record in items)
             Insert(database,filemap_record);
     }
+    public static void Upsert(this Database database,FilemapRecord filemap_record)
+    {
+        if(ExistsFilemapRecord(database,filemap_record))
+        {
+            Update(database,filemap_record);
+            return;
+        }
+        Insert(database,filemap_record);
+    }
+    public static void Upsert(this Database database,IEnumerable<FilemapRecord> items)
+    {
+        foreach(FilemapRecord filemap_record in items)
+            Upsert(database,filemap_record);
+    }
     public static void Update(this Database database,FilemapRecord filemap_record)
     {
         SqliteCommand cmd = database.Connection.CreateCommand();
@@ -34,6 +51,11 @@ public static class FilemapRecordExt
         cmd.Parameters.AddWithValue("$source_path",filemap_record.SourcePath);
         cmd.Parameters.AddWithValue("$type",filemap_record.Type);
         cmd.ExecuteNonQuery();
+    }
+    public static void Update(this Database database,IEnumerable<FilemapRecord> items)
+    {
+        foreach(FilemapRecord item in items)
+            Update(database,item);
     }
     public static List<FilemapRecord> ReadFilemapRecord(this Database database)
     {
@@ -53,6 +75,49 @@ public static class FilemapRecordExt
                 }
             );
         }
+        items.Sort((a,b) => (int)(a.HiberliteId - b.HiberliteId));
         return items;
+    }
+    public static FilemapRecord? ReadFilemapRecord(this Database database,long hiberlite_id)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"SELECT * FROM {FilemapRecord.TABLE_NAME} WHERE hiberlite_id = $hiberlite_id;";
+        cmd.Parameters.AddWithValue("$hiberlite_id",hiberlite_id);
+        using SqliteDataReader reader = cmd.ExecuteReader();
+        if(reader.Read())
+            return new FilemapRecord()
+            {
+                HiberliteId = reader.GetInteger("hiberlite_id"),
+                Shortname = reader.GetText("shortname"),
+                SourcePath = reader.GetText("source_path"),
+                Type = reader.GetText("type")
+            };
+        return null;
+    }
+    public static bool ExistsFilemapRecord(this Database database,long hiberlite_id)
+    {
+        return ReadFilemapRecord(database,hiberlite_id) != null;
+    }
+    public static bool ExistsFilemapRecord(this Database database,FilemapRecord filemap_record)
+    {
+        return ExistsFilemapRecord(database,filemap_record.HiberliteId);
+    }
+    public static void DeleteFilemapRecord(this Database database,long hiberlite_id)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"DELETE FROM {FilemapRecord.TABLE_NAME} WHERE hiberlite_id = $hiberlite_id;";
+        cmd.Parameters.AddWithValue("$hiberlite_id",hiberlite_id);
+        cmd.ExecuteNonQuery();
+    }
+    public static void DeleteFilemapRecord(this Database database,IEnumerable<long> hiberlite_ids)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"DELETE FROM {FilemapRecord.TABLE_NAME} WHERE hiberlite_id = $hiberlite_id;";
+        foreach(long hiberlite_id in hiberlite_ids)
+        {
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("$hiberlite_id",hiberlite_id);
+            cmd.ExecuteNonQuery();
+        }
     }
 }
