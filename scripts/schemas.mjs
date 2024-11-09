@@ -1,8 +1,8 @@
-import { SchemaType } from "./sql.mjs"
+import { SchemaTag, SchemaType } from "./sql.mjs"
 
 export class Schema
 {
-    /** @type {Record<string,SchemaCell} */
+    /** @type {Record<string,SchemaCell>} */
     cells = {};
     /**
      *
@@ -15,7 +15,7 @@ export class Schema
      *
      * @param {SchemaType} type
      * @param {string} name
-     * @param {Array<string>} tags
+     * @param {Array<SchemaTag>} tags
      * @returns {this}
      */
     addField(name, type, tags = [])
@@ -89,12 +89,13 @@ export const schemas = [
         .addField("biomename", "TEXT")
         .addField("hiberlite_id", "INTEGER", ["PRIMARY KEY", "AUTOINCREMENT"])
         .addField("map_shortname", "TEXT"),
-    // new Schema("pixelanim")
-    //     .addField("animtype", "INTEGER")
-    //     .addField("atlas_shortname", "TEXT")
-    //     .addField("compressed_frame_hiberlite_ids", "BLOB")
-    //     .addField("shortname", "TEXT")
-    //     .addField("ticks_per_frame", "INTEGER"),
+    new Schema("pixelanim")
+        .addField("animtype","INTEGER")
+        .addField("atlas_shortname","TEXT")
+        .addField("compressed_frame_hiberlite_ids","BLOB")
+        .addField("hiberlite_id","INTEGER")
+        .addField("shortname","TEXT")
+        .addField("ticks_per_frame","INTEGER"),
     new Schema("precache_record")
         .addField("hiberlite_id", "INTEGER", ["PRIMARY KEY", "AUTOINCREMENT"])
         .addField("mapname", "TEXT")
@@ -115,8 +116,9 @@ export const schemas = [
         .addField("hiberlite_parent_id", "INTEGER")
         .addField("item_depth", "INTEGER")
         .addField("item_draw_layer", "INTEGER")
+        .addField("item_layer_id","INTEGER")
         .addField("item_layer_name", "TEXT")
-        .addField("item_num_vertices", "INTEGER")
+        .addField("item_num_verticies", "INTEGER")
         .addField("item_tileset_image_shortname", "TEXT")
         .addField("item_vertex_data", "BLOB"),
     new Schema("tmx_map_instance_layers_items_item_animations_items")

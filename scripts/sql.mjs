@@ -9,6 +9,8 @@ export const type_map = {
 
 /** @typedef @type {"INTEGER" | "TEXT" | "BLOB"} */
 export const SchemaType = null
+/** @typedef @type {"PRIMARY KEY" | "AUTOINCREMENT"} */
+export const SchemaTag = null
 
 /**
  *

@@ -53,6 +53,11 @@ public static class DatabaseUtils
             command.CommandText = MapBiomeRecord.CREATE_TABLE_COMMAND;
             command.ExecuteNonQuery();
         }
+        if(!connection.ExistsTable(Pixelanim.TABLE_NAME))
+        {
+            command.CommandText = Pixelanim.CREATE_TABLE_COMMAND;
+            command.ExecuteNonQuery();
+        }
         if(!connection.ExistsTable(PrecacheRecord.TABLE_NAME))
         {
             command.CommandText = PrecacheRecord.CREATE_TABLE_COMMAND;
@@ -118,6 +123,7 @@ public static class DatabaseUtils
             db.Upsert(database.ReadJotBytecode());
             db.Upsert(database.ReadLocalizedText());
             db.Upsert(database.ReadMapBiomeRecord());
+            db.Upsert(database.ReadPixelanim());
             db.Upsert(database.ReadPrecacheRecord());
             db.Upsert(database.ReadSwfanim());
             db.Upsert(database.ReadTmxMapInstance());
