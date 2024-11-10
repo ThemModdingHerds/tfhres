@@ -21,14 +21,28 @@ public static class SwfanimExt
         cmd.Parameters.AddWithValue("$shortname",swfanim.Shortname);
         cmd.ExecuteNonQuery();
     }
+    public static void ForceInsert(this Database database,Swfanim swfanim)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"INSERT INTO {Swfanim.TABLE_NAME} (bytes,hiberlite_id,shortname) VALUES ($bytes,$hiberlite_id,$shortname);";
+        cmd.Parameters.AddWithValue("$bytes",swfanim.Bytes);
+        cmd.Parameters.AddWithValue("$hiberlite_id",swfanim.HiberliteId);
+        cmd.Parameters.AddWithValue("$shortname",swfanim.Shortname);
+        cmd.ExecuteNonQuery();
+    }
     public static void Insert(this Database database,IEnumerable<Swfanim> items)
     {
         foreach(Swfanim swfanim in items)
             Insert(database,swfanim);
     }
+    public static void ForceInsert(this Database database,IEnumerable<Swfanim> items)
+    {
+        foreach(Swfanim swfanim in items)
+            ForceInsert(database,swfanim);
+    }
     public static void Upsert(this Database database,Swfanim swfanim)
     {
-        if(ExistsSwfanim(database,swfanim))
+        if(ExistsSwfanim(database,swfanim.HiberliteId))
         {
             Update(database,swfanim);
             return;
@@ -39,6 +53,20 @@ public static class SwfanimExt
     {
         foreach(Swfanim swfanim in items)
             Upsert(database,swfanim);
+    }
+    public static void Delsert(this Database database,Swfanim swfanim)
+    {
+        if(ExistsSwfanim(database,swfanim.HiberliteId))
+        {
+            DeleteSwfanim(database,swfanim.HiberliteId);
+            return;
+        }
+        ForceInsert(database,swfanim);
+    }
+    public static void Delsert(this Database database,IEnumerable<Swfanim> items)
+    {
+        foreach(Swfanim swfanim in items)
+            Delsert(database,swfanim);
     }
     public static void Update(this Database database,Swfanim swfanim)
     {

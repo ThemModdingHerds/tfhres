@@ -23,14 +23,29 @@ public static class TmxMapInstanceExt
         cmd.Parameters.AddWithValue("$tmx_source_filepath",tmx_map_instance.TmxSourceFilepath);
         cmd.ExecuteNonQuery();
     }
+    public static void ForceInsert(this Database database,TmxMapInstance tmx_map_instance)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"INSERT INTO {TmxMapInstance.TABLE_NAME} (flattened_terrain_grid,hiberlite_id,map_id,tmx_source_filepath) VALUES ($flattened_terrain_grid,$hiberlite_id,$map_id,$tmx_source_filepath);";
+        cmd.Parameters.AddWithValue("$flattened_terrain_grid",tmx_map_instance.FlattenedTerrainGrid);
+        cmd.Parameters.AddWithValue("$hiberlite_id",tmx_map_instance.HiberliteId);
+        cmd.Parameters.AddWithValue("$map_id",tmx_map_instance.MapId);
+        cmd.Parameters.AddWithValue("$tmx_source_filepath",tmx_map_instance.TmxSourceFilepath);
+        cmd.ExecuteNonQuery();
+    }
     public static void Insert(this Database database,IEnumerable<TmxMapInstance> items)
     {
         foreach(TmxMapInstance tmx_map_instance in items)
             Insert(database,tmx_map_instance);
     }
+    public static void ForceInsert(this Database database,IEnumerable<TmxMapInstance> items)
+    {
+        foreach(TmxMapInstance tmx_map_instance in items)
+            ForceInsert(database,tmx_map_instance);
+    }
     public static void Upsert(this Database database,TmxMapInstance tmx_map_instance)
     {
-        if(ExistsTmxMapInstance(database,tmx_map_instance))
+        if(ExistsTmxMapInstance(database,tmx_map_instance.HiberliteId))
         {
             Update(database,tmx_map_instance);
             return;
@@ -41,6 +56,20 @@ public static class TmxMapInstanceExt
     {
         foreach(TmxMapInstance tmx_map_instance in items)
             Upsert(database,tmx_map_instance);
+    }
+    public static void Delsert(this Database database,TmxMapInstance tmx_map_instance)
+    {
+        if(ExistsTmxMapInstance(database,tmx_map_instance.HiberliteId))
+        {
+            DeleteTmxMapInstance(database,tmx_map_instance.HiberliteId);
+            return;
+        }
+        ForceInsert(database,tmx_map_instance);
+    }
+    public static void Delsert(this Database database,IEnumerable<TmxMapInstance> items)
+    {
+        foreach(TmxMapInstance tmx_map_instance in items)
+            Delsert(database,tmx_map_instance);
     }
     public static void Update(this Database database,TmxMapInstance tmx_map_instance)
     {

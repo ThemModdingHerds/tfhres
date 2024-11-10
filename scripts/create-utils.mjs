@@ -46,14 +46,40 @@ public static class DatabaseUtils
 ${schemas.map(create_command_execution).join("\n")}
 ${indices.map(create_index_command_execution).join("\n")}
     }
-    public static Database Merge(IEnumerable<Database> databases)
+    public static void Upsert(this Database db,params Database[] databases)
     {
-        Database db = new();
         foreach(Database database in databases)
         {
             ${schemas.map((schema) => `db.Upsert(database.Read${convert_name(schema.name)}());`).join("\n            ")}
         }
-        return db;
+    }
+    public static void Update(this Database db,params Database[] databases)
+    {
+        foreach(Database database in databases)
+        {
+            ${schemas.map((schema) => `db.Update(database.Read${convert_name(schema.name)}());`).join("\n            ")}
+        }
+    }
+    public static void Insert(this Database db,params Database[] databases)
+    {
+        foreach(Database database in databases)
+        {
+            ${schemas.map((schema) => `db.Insert(database.Read${convert_name(schema.name)}());`).join("\n            ")}
+        }
+    }
+    public static void ForceInsert(this Database db,params Database[] databases)
+    {
+        foreach(Database database in databases)
+        {
+            ${schemas.map((schema) => `db.ForceInsert(database.Read${convert_name(schema.name)}());`).join("\n            ")}
+        }
+    }
+    public static void Delsert(this Database db,params Database[] databases)
+    {
+        foreach(Database database in databases)
+        {
+            ${schemas.map((schema) => `db.Delsert(database.Read${convert_name(schema.name)}());`).join("\n            ")}
+        }
     }
 }`
 }

@@ -21,14 +21,28 @@ public static class MapBiomeRecordExt
         cmd.Parameters.AddWithValue("$map_shortname",map_biome_record.MapShortname);
         cmd.ExecuteNonQuery();
     }
+    public static void ForceInsert(this Database database,MapBiomeRecord map_biome_record)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"INSERT INTO {MapBiomeRecord.TABLE_NAME} (biomename,hiberlite_id,map_shortname) VALUES ($biomename,$hiberlite_id,$map_shortname);";
+        cmd.Parameters.AddWithValue("$biomename",map_biome_record.Biomename);
+        cmd.Parameters.AddWithValue("$hiberlite_id",map_biome_record.HiberliteId);
+        cmd.Parameters.AddWithValue("$map_shortname",map_biome_record.MapShortname);
+        cmd.ExecuteNonQuery();
+    }
     public static void Insert(this Database database,IEnumerable<MapBiomeRecord> items)
     {
         foreach(MapBiomeRecord map_biome_record in items)
             Insert(database,map_biome_record);
     }
+    public static void ForceInsert(this Database database,IEnumerable<MapBiomeRecord> items)
+    {
+        foreach(MapBiomeRecord map_biome_record in items)
+            ForceInsert(database,map_biome_record);
+    }
     public static void Upsert(this Database database,MapBiomeRecord map_biome_record)
     {
-        if(ExistsMapBiomeRecord(database,map_biome_record))
+        if(ExistsMapBiomeRecord(database,map_biome_record.HiberliteId))
         {
             Update(database,map_biome_record);
             return;
@@ -39,6 +53,20 @@ public static class MapBiomeRecordExt
     {
         foreach(MapBiomeRecord map_biome_record in items)
             Upsert(database,map_biome_record);
+    }
+    public static void Delsert(this Database database,MapBiomeRecord map_biome_record)
+    {
+        if(ExistsMapBiomeRecord(database,map_biome_record.HiberliteId))
+        {
+            DeleteMapBiomeRecord(database,map_biome_record.HiberliteId);
+            return;
+        }
+        ForceInsert(database,map_biome_record);
+    }
+    public static void Delsert(this Database database,IEnumerable<MapBiomeRecord> items)
+    {
+        foreach(MapBiomeRecord map_biome_record in items)
+            Delsert(database,map_biome_record);
     }
     public static void Update(this Database database,MapBiomeRecord map_biome_record)
     {

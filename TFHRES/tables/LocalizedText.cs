@@ -25,14 +25,30 @@ public static class LocalizedTextExt
         cmd.Parameters.AddWithValue("$text",localized_text.Text);
         cmd.ExecuteNonQuery();
     }
+    public static void ForceInsert(this Database database,LocalizedText localized_text)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"INSERT INTO {LocalizedText.TABLE_NAME} (hiberlite_id,langcode,storyfile_dbname,tag,text) VALUES ($hiberlite_id,$langcode,$storyfile_dbname,$tag,$text);";
+        cmd.Parameters.AddWithValue("$hiberlite_id",localized_text.HiberliteId);
+        cmd.Parameters.AddWithValue("$langcode",localized_text.Langcode);
+        cmd.Parameters.AddWithValue("$storyfile_dbname",localized_text.StoryfileDbname);
+        cmd.Parameters.AddWithValue("$tag",localized_text.Tag);
+        cmd.Parameters.AddWithValue("$text",localized_text.Text);
+        cmd.ExecuteNonQuery();
+    }
     public static void Insert(this Database database,IEnumerable<LocalizedText> items)
     {
         foreach(LocalizedText localized_text in items)
             Insert(database,localized_text);
     }
+    public static void ForceInsert(this Database database,IEnumerable<LocalizedText> items)
+    {
+        foreach(LocalizedText localized_text in items)
+            ForceInsert(database,localized_text);
+    }
     public static void Upsert(this Database database,LocalizedText localized_text)
     {
-        if(ExistsLocalizedText(database,localized_text))
+        if(ExistsLocalizedText(database,localized_text.HiberliteId))
         {
             Update(database,localized_text);
             return;
@@ -43,6 +59,20 @@ public static class LocalizedTextExt
     {
         foreach(LocalizedText localized_text in items)
             Upsert(database,localized_text);
+    }
+    public static void Delsert(this Database database,LocalizedText localized_text)
+    {
+        if(ExistsLocalizedText(database,localized_text.HiberliteId))
+        {
+            DeleteLocalizedText(database,localized_text.HiberliteId);
+            return;
+        }
+        ForceInsert(database,localized_text);
+    }
+    public static void Delsert(this Database database,IEnumerable<LocalizedText> items)
+    {
+        foreach(LocalizedText localized_text in items)
+            Delsert(database,localized_text);
     }
     public static void Update(this Database database,LocalizedText localized_text)
     {

@@ -27,14 +27,31 @@ public static class PixelanimExt
         cmd.Parameters.AddWithValue("$ticks_per_frame",pixelanim.TicksPerFrame);
         cmd.ExecuteNonQuery();
     }
+    public static void ForceInsert(this Database database,Pixelanim pixelanim)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"INSERT INTO {Pixelanim.TABLE_NAME} (animtype,atlas_shortname,compressed_frame_hiberlite_ids,hiberlite_id,shortname,ticks_per_frame) VALUES ($animtype,$atlas_shortname,$compressed_frame_hiberlite_ids,$hiberlite_id,$shortname,$ticks_per_frame);";
+        cmd.Parameters.AddWithValue("$animtype",pixelanim.Animtype);
+        cmd.Parameters.AddWithValue("$atlas_shortname",pixelanim.AtlasShortname);
+        cmd.Parameters.AddWithValue("$compressed_frame_hiberlite_ids",pixelanim.CompressedFrameHiberliteIds);
+        cmd.Parameters.AddWithValue("$hiberlite_id",pixelanim.HiberliteId);
+        cmd.Parameters.AddWithValue("$shortname",pixelanim.Shortname);
+        cmd.Parameters.AddWithValue("$ticks_per_frame",pixelanim.TicksPerFrame);
+        cmd.ExecuteNonQuery();
+    }
     public static void Insert(this Database database,IEnumerable<Pixelanim> items)
     {
         foreach(Pixelanim pixelanim in items)
             Insert(database,pixelanim);
     }
+    public static void ForceInsert(this Database database,IEnumerable<Pixelanim> items)
+    {
+        foreach(Pixelanim pixelanim in items)
+            ForceInsert(database,pixelanim);
+    }
     public static void Upsert(this Database database,Pixelanim pixelanim)
     {
-        if(ExistsPixelanim(database,pixelanim))
+        if(ExistsPixelanim(database,pixelanim.HiberliteId))
         {
             Update(database,pixelanim);
             return;
@@ -45,6 +62,20 @@ public static class PixelanimExt
     {
         foreach(Pixelanim pixelanim in items)
             Upsert(database,pixelanim);
+    }
+    public static void Delsert(this Database database,Pixelanim pixelanim)
+    {
+        if(ExistsPixelanim(database,pixelanim.HiberliteId))
+        {
+            DeletePixelanim(database,pixelanim.HiberliteId);
+            return;
+        }
+        ForceInsert(database,pixelanim);
+    }
+    public static void Delsert(this Database database,IEnumerable<Pixelanim> items)
+    {
+        foreach(Pixelanim pixelanim in items)
+            Delsert(database,pixelanim);
     }
     public static void Update(this Database database,Pixelanim pixelanim)
     {

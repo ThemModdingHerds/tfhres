@@ -23,14 +23,29 @@ public static class CachedTextfileExt
         cmd.Parameters.AddWithValue("$text_data",cached_textfile.TextData);
         cmd.ExecuteNonQuery();
     }
+    public static void ForceInsert(this Database database,CachedTextfile cached_textfile)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"INSERT INTO {CachedTextfile.TABLE_NAME} (hiberlite_id,shortname,source_file,text_data) VALUES ($hiberlite_id,$shortname,$source_file,$text_data);";
+        cmd.Parameters.AddWithValue("$hiberlite_id",cached_textfile.HiberliteId);
+        cmd.Parameters.AddWithValue("$shortname",cached_textfile.Shortname);
+        cmd.Parameters.AddWithValue("$source_file",cached_textfile.SourceFile);
+        cmd.Parameters.AddWithValue("$text_data",cached_textfile.TextData);
+        cmd.ExecuteNonQuery();
+    }
     public static void Insert(this Database database,IEnumerable<CachedTextfile> items)
     {
         foreach(CachedTextfile cached_textfile in items)
             Insert(database,cached_textfile);
     }
+    public static void ForceInsert(this Database database,IEnumerable<CachedTextfile> items)
+    {
+        foreach(CachedTextfile cached_textfile in items)
+            ForceInsert(database,cached_textfile);
+    }
     public static void Upsert(this Database database,CachedTextfile cached_textfile)
     {
-        if(ExistsCachedTextfile(database,cached_textfile))
+        if(ExistsCachedTextfile(database,cached_textfile.HiberliteId))
         {
             Update(database,cached_textfile);
             return;
@@ -41,6 +56,20 @@ public static class CachedTextfileExt
     {
         foreach(CachedTextfile cached_textfile in items)
             Upsert(database,cached_textfile);
+    }
+    public static void Delsert(this Database database,CachedTextfile cached_textfile)
+    {
+        if(ExistsCachedTextfile(database,cached_textfile.HiberliteId))
+        {
+            DeleteCachedTextfile(database,cached_textfile.HiberliteId);
+            return;
+        }
+        ForceInsert(database,cached_textfile);
+    }
+    public static void Delsert(this Database database,IEnumerable<CachedTextfile> items)
+    {
+        foreach(CachedTextfile cached_textfile in items)
+            Delsert(database,cached_textfile);
     }
     public static void Update(this Database database,CachedTextfile cached_textfile)
     {

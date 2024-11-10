@@ -1,9 +1,7 @@
-using System.ComponentModel;
 using System.Data;
 using Microsoft.Data.Sqlite;
-using ThemModdingHerds.TFHResource.Data;
 namespace ThemModdingHerds.TFHResource;
-public class Database : IDisposable, ICloneable
+public class Database : IDisposable
 {
     public SqliteConnection Connection {get;private set;}
     public ConnectionState State {get => Connection.State;}
@@ -32,13 +30,11 @@ public class Database : IDisposable, ICloneable
     {
         Connection.Close();
     }
-    public object Clone()
+    public Database Clone()
     {
-        return new Database(Connection.Clone());
-    }
-    public Database Merge(params Database[] databases)
-    {
-        return DatabaseUtils.Merge([this,..databases]);
+        Database clone = new();
+        DatabaseUtils.ForceInsert(clone,this);
+        return clone;
     }
     public void Save(string path,bool overwrite = false)
     {

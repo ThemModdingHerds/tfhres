@@ -29,14 +29,32 @@ public static class CachedImageExt
         cmd.Parameters.AddWithValue("$width",cached_image.Width);
         cmd.ExecuteNonQuery();
     }
+    public static void ForceInsert(this Database database,CachedImage cached_image)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"INSERT INTO {CachedImage.TABLE_NAME} (height,hiberlite_id,image_data,is_compressed,shortname,vram_only,width) VALUES ($height,$hiberlite_id,$image_data,$is_compressed,$shortname,$vram_only,$width);";
+        cmd.Parameters.AddWithValue("$height",cached_image.Height);
+        cmd.Parameters.AddWithValue("$hiberlite_id",cached_image.HiberliteId);
+        cmd.Parameters.AddWithValue("$image_data",cached_image.ImageData);
+        cmd.Parameters.AddWithValue("$is_compressed",cached_image.IsCompressed);
+        cmd.Parameters.AddWithValue("$shortname",cached_image.Shortname);
+        cmd.Parameters.AddWithValue("$vram_only",cached_image.VramOnly);
+        cmd.Parameters.AddWithValue("$width",cached_image.Width);
+        cmd.ExecuteNonQuery();
+    }
     public static void Insert(this Database database,IEnumerable<CachedImage> items)
     {
         foreach(CachedImage cached_image in items)
             Insert(database,cached_image);
     }
+    public static void ForceInsert(this Database database,IEnumerable<CachedImage> items)
+    {
+        foreach(CachedImage cached_image in items)
+            ForceInsert(database,cached_image);
+    }
     public static void Upsert(this Database database,CachedImage cached_image)
     {
-        if(ExistsCachedImage(database,cached_image))
+        if(ExistsCachedImage(database,cached_image.HiberliteId))
         {
             Update(database,cached_image);
             return;
@@ -47,6 +65,20 @@ public static class CachedImageExt
     {
         foreach(CachedImage cached_image in items)
             Upsert(database,cached_image);
+    }
+    public static void Delsert(this Database database,CachedImage cached_image)
+    {
+        if(ExistsCachedImage(database,cached_image.HiberliteId))
+        {
+            DeleteCachedImage(database,cached_image.HiberliteId);
+            return;
+        }
+        ForceInsert(database,cached_image);
+    }
+    public static void Delsert(this Database database,IEnumerable<CachedImage> items)
+    {
+        foreach(CachedImage cached_image in items)
+            Delsert(database,cached_image);
     }
     public static void Update(this Database database,CachedImage cached_image)
     {

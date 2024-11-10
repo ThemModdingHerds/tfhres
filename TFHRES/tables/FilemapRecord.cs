@@ -23,14 +23,29 @@ public static class FilemapRecordExt
         cmd.Parameters.AddWithValue("$type",filemap_record.Type);
         cmd.ExecuteNonQuery();
     }
+    public static void ForceInsert(this Database database,FilemapRecord filemap_record)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"INSERT INTO {FilemapRecord.TABLE_NAME} (hiberlite_id,shortname,source_path,type) VALUES ($hiberlite_id,$shortname,$source_path,$type);";
+        cmd.Parameters.AddWithValue("$hiberlite_id",filemap_record.HiberliteId);
+        cmd.Parameters.AddWithValue("$shortname",filemap_record.Shortname);
+        cmd.Parameters.AddWithValue("$source_path",filemap_record.SourcePath);
+        cmd.Parameters.AddWithValue("$type",filemap_record.Type);
+        cmd.ExecuteNonQuery();
+    }
     public static void Insert(this Database database,IEnumerable<FilemapRecord> items)
     {
         foreach(FilemapRecord filemap_record in items)
             Insert(database,filemap_record);
     }
+    public static void ForceInsert(this Database database,IEnumerable<FilemapRecord> items)
+    {
+        foreach(FilemapRecord filemap_record in items)
+            ForceInsert(database,filemap_record);
+    }
     public static void Upsert(this Database database,FilemapRecord filemap_record)
     {
-        if(ExistsFilemapRecord(database,filemap_record))
+        if(ExistsFilemapRecord(database,filemap_record.HiberliteId))
         {
             Update(database,filemap_record);
             return;
@@ -41,6 +56,20 @@ public static class FilemapRecordExt
     {
         foreach(FilemapRecord filemap_record in items)
             Upsert(database,filemap_record);
+    }
+    public static void Delsert(this Database database,FilemapRecord filemap_record)
+    {
+        if(ExistsFilemapRecord(database,filemap_record.HiberliteId))
+        {
+            DeleteFilemapRecord(database,filemap_record.HiberliteId);
+            return;
+        }
+        ForceInsert(database,filemap_record);
+    }
+    public static void Delsert(this Database database,IEnumerable<FilemapRecord> items)
+    {
+        foreach(FilemapRecord filemap_record in items)
+            Delsert(database,filemap_record);
     }
     public static void Update(this Database database,FilemapRecord filemap_record)
     {

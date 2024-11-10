@@ -109,9 +109,8 @@ public static class DatabaseUtils
             command.ExecuteNonQuery();
         }
     }
-    public static Database Merge(IEnumerable<Database> databases)
+    public static void Upsert(this Database db,params Database[] databases)
     {
-        Database db = new();
         foreach(Database database in databases)
         {
             db.Upsert(database.ReadCacheRecord());
@@ -131,6 +130,93 @@ public static class DatabaseUtils
             db.Upsert(database.ReadTmxMapInstanceLayersItemsItemAnimationsItems());
             db.Upsert(database.ReadVarstate());
         }
-        return db;
+    }
+    public static void Update(this Database db,params Database[] databases)
+    {
+        foreach(Database database in databases)
+        {
+            db.Update(database.ReadCacheRecord());
+            db.Update(database.ReadCachedImage());
+            db.Update(database.ReadCachedTextfile());
+            db.Update(database.ReadFilemapRecord());
+            db.Update(database.ReadImageBiomeRecord());
+            db.Update(database.ReadInkBytecode());
+            db.Update(database.ReadJotBytecode());
+            db.Update(database.ReadLocalizedText());
+            db.Update(database.ReadMapBiomeRecord());
+            db.Update(database.ReadPixelanim());
+            db.Update(database.ReadPrecacheRecord());
+            db.Update(database.ReadSwfanim());
+            db.Update(database.ReadTmxMapInstance());
+            db.Update(database.ReadTmxMapInstanceLayersItems());
+            db.Update(database.ReadTmxMapInstanceLayersItemsItemAnimationsItems());
+            db.Update(database.ReadVarstate());
+        }
+    }
+    public static void Insert(this Database db,params Database[] databases)
+    {
+        foreach(Database database in databases)
+        {
+            db.Insert(database.ReadCacheRecord());
+            db.Insert(database.ReadCachedImage());
+            db.Insert(database.ReadCachedTextfile());
+            db.Insert(database.ReadFilemapRecord());
+            db.Insert(database.ReadImageBiomeRecord());
+            db.Insert(database.ReadInkBytecode());
+            db.Insert(database.ReadJotBytecode());
+            db.Insert(database.ReadLocalizedText());
+            db.Insert(database.ReadMapBiomeRecord());
+            db.Insert(database.ReadPixelanim());
+            db.Insert(database.ReadPrecacheRecord());
+            db.Insert(database.ReadSwfanim());
+            db.Insert(database.ReadTmxMapInstance());
+            db.Insert(database.ReadTmxMapInstanceLayersItems());
+            db.Insert(database.ReadTmxMapInstanceLayersItemsItemAnimationsItems());
+            db.Insert(database.ReadVarstate());
+        }
+    }
+    public static void ForceInsert(this Database db,params Database[] databases)
+    {
+        foreach(Database database in databases)
+        {
+            db.ForceInsert(database.ReadCacheRecord());
+            db.ForceInsert(database.ReadCachedImage());
+            db.ForceInsert(database.ReadCachedTextfile());
+            db.ForceInsert(database.ReadFilemapRecord());
+            db.ForceInsert(database.ReadImageBiomeRecord());
+            db.ForceInsert(database.ReadInkBytecode());
+            db.ForceInsert(database.ReadJotBytecode());
+            db.ForceInsert(database.ReadLocalizedText());
+            db.ForceInsert(database.ReadMapBiomeRecord());
+            db.ForceInsert(database.ReadPixelanim());
+            db.ForceInsert(database.ReadPrecacheRecord());
+            db.ForceInsert(database.ReadSwfanim());
+            db.ForceInsert(database.ReadTmxMapInstance());
+            db.ForceInsert(database.ReadTmxMapInstanceLayersItems());
+            db.ForceInsert(database.ReadTmxMapInstanceLayersItemsItemAnimationsItems());
+            db.ForceInsert(database.ReadVarstate());
+        }
+    }
+    public static void Delsert(this Database db,params Database[] databases)
+    {
+        foreach(Database database in databases)
+        {
+            db.Delsert(database.ReadCacheRecord());
+            db.Delsert(database.ReadCachedImage());
+            db.Delsert(database.ReadCachedTextfile());
+            db.Delsert(database.ReadFilemapRecord());
+            db.Delsert(database.ReadImageBiomeRecord());
+            db.Delsert(database.ReadInkBytecode());
+            db.Delsert(database.ReadJotBytecode());
+            db.Delsert(database.ReadLocalizedText());
+            db.Delsert(database.ReadMapBiomeRecord());
+            db.Delsert(database.ReadPixelanim());
+            db.Delsert(database.ReadPrecacheRecord());
+            db.Delsert(database.ReadSwfanim());
+            db.Delsert(database.ReadTmxMapInstance());
+            db.Delsert(database.ReadTmxMapInstanceLayersItems());
+            db.Delsert(database.ReadTmxMapInstanceLayersItemsItemAnimationsItems());
+            db.Delsert(database.ReadVarstate());
+        }
     }
 }

@@ -25,14 +25,30 @@ public static class InkBytecodeExt
         cmd.Parameters.AddWithValue("$source_file",ink_bytecode.SourceFile);
         cmd.ExecuteNonQuery();
     }
+    public static void ForceInsert(this Database database,InkBytecode ink_bytecode)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"INSERT INTO {InkBytecode.TABLE_NAME} (bytecode,hiberlite_id,mapname,shortname,source_file) VALUES ($bytecode,$hiberlite_id,$mapname,$shortname,$source_file);";
+        cmd.Parameters.AddWithValue("$bytecode",ink_bytecode.Bytecode);
+        cmd.Parameters.AddWithValue("$hiberlite_id",ink_bytecode.HiberliteId);
+        cmd.Parameters.AddWithValue("$mapname",ink_bytecode.Mapname);
+        cmd.Parameters.AddWithValue("$shortname",ink_bytecode.Shortname);
+        cmd.Parameters.AddWithValue("$source_file",ink_bytecode.SourceFile);
+        cmd.ExecuteNonQuery();
+    }
     public static void Insert(this Database database,IEnumerable<InkBytecode> items)
     {
         foreach(InkBytecode ink_bytecode in items)
             Insert(database,ink_bytecode);
     }
+    public static void ForceInsert(this Database database,IEnumerable<InkBytecode> items)
+    {
+        foreach(InkBytecode ink_bytecode in items)
+            ForceInsert(database,ink_bytecode);
+    }
     public static void Upsert(this Database database,InkBytecode ink_bytecode)
     {
-        if(ExistsInkBytecode(database,ink_bytecode))
+        if(ExistsInkBytecode(database,ink_bytecode.HiberliteId))
         {
             Update(database,ink_bytecode);
             return;
@@ -43,6 +59,20 @@ public static class InkBytecodeExt
     {
         foreach(InkBytecode ink_bytecode in items)
             Upsert(database,ink_bytecode);
+    }
+    public static void Delsert(this Database database,InkBytecode ink_bytecode)
+    {
+        if(ExistsInkBytecode(database,ink_bytecode.HiberliteId))
+        {
+            DeleteInkBytecode(database,ink_bytecode.HiberliteId);
+            return;
+        }
+        ForceInsert(database,ink_bytecode);
+    }
+    public static void Delsert(this Database database,IEnumerable<InkBytecode> items)
+    {
+        foreach(InkBytecode ink_bytecode in items)
+            Delsert(database,ink_bytecode);
     }
     public static void Update(this Database database,InkBytecode ink_bytecode)
     {

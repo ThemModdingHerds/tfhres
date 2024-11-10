@@ -21,14 +21,28 @@ public static class CacheRecordExt
         cmd.Parameters.AddWithValue("$source_path",cache_record.SourcePath);
         cmd.ExecuteNonQuery();
     }
+    public static void ForceInsert(this Database database,CacheRecord cache_record)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"INSERT INTO {CacheRecord.TABLE_NAME} (hiberlite_id,shortname,source_path) VALUES ($hiberlite_id,$shortname,$source_path);";
+        cmd.Parameters.AddWithValue("$hiberlite_id",cache_record.HiberliteId);
+        cmd.Parameters.AddWithValue("$shortname",cache_record.Shortname);
+        cmd.Parameters.AddWithValue("$source_path",cache_record.SourcePath);
+        cmd.ExecuteNonQuery();
+    }
     public static void Insert(this Database database,IEnumerable<CacheRecord> items)
     {
         foreach(CacheRecord cache_record in items)
             Insert(database,cache_record);
     }
+    public static void ForceInsert(this Database database,IEnumerable<CacheRecord> items)
+    {
+        foreach(CacheRecord cache_record in items)
+            ForceInsert(database,cache_record);
+    }
     public static void Upsert(this Database database,CacheRecord cache_record)
     {
-        if(ExistsCacheRecord(database,cache_record))
+        if(ExistsCacheRecord(database,cache_record.HiberliteId))
         {
             Update(database,cache_record);
             return;
@@ -39,6 +53,20 @@ public static class CacheRecordExt
     {
         foreach(CacheRecord cache_record in items)
             Upsert(database,cache_record);
+    }
+    public static void Delsert(this Database database,CacheRecord cache_record)
+    {
+        if(ExistsCacheRecord(database,cache_record.HiberliteId))
+        {
+            DeleteCacheRecord(database,cache_record.HiberliteId);
+            return;
+        }
+        ForceInsert(database,cache_record);
+    }
+    public static void Delsert(this Database database,IEnumerable<CacheRecord> items)
+    {
+        foreach(CacheRecord cache_record in items)
+            Delsert(database,cache_record);
     }
     public static void Update(this Database database,CacheRecord cache_record)
     {

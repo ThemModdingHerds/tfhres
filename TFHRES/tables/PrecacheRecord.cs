@@ -23,14 +23,29 @@ public static class PrecacheRecordExt
         cmd.Parameters.AddWithValue("$type",precache_record.Type);
         cmd.ExecuteNonQuery();
     }
+    public static void ForceInsert(this Database database,PrecacheRecord precache_record)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"INSERT INTO {PrecacheRecord.TABLE_NAME} (hiberlite_id,mapname,shortname,type) VALUES ($hiberlite_id,$mapname,$shortname,$type);";
+        cmd.Parameters.AddWithValue("$hiberlite_id",precache_record.HiberliteId);
+        cmd.Parameters.AddWithValue("$mapname",precache_record.Mapname);
+        cmd.Parameters.AddWithValue("$shortname",precache_record.Shortname);
+        cmd.Parameters.AddWithValue("$type",precache_record.Type);
+        cmd.ExecuteNonQuery();
+    }
     public static void Insert(this Database database,IEnumerable<PrecacheRecord> items)
     {
         foreach(PrecacheRecord precache_record in items)
             Insert(database,precache_record);
     }
+    public static void ForceInsert(this Database database,IEnumerable<PrecacheRecord> items)
+    {
+        foreach(PrecacheRecord precache_record in items)
+            ForceInsert(database,precache_record);
+    }
     public static void Upsert(this Database database,PrecacheRecord precache_record)
     {
-        if(ExistsPrecacheRecord(database,precache_record))
+        if(ExistsPrecacheRecord(database,precache_record.HiberliteId))
         {
             Update(database,precache_record);
             return;
@@ -41,6 +56,20 @@ public static class PrecacheRecordExt
     {
         foreach(PrecacheRecord precache_record in items)
             Upsert(database,precache_record);
+    }
+    public static void Delsert(this Database database,PrecacheRecord precache_record)
+    {
+        if(ExistsPrecacheRecord(database,precache_record.HiberliteId))
+        {
+            DeletePrecacheRecord(database,precache_record.HiberliteId);
+            return;
+        }
+        ForceInsert(database,precache_record);
+    }
+    public static void Delsert(this Database database,IEnumerable<PrecacheRecord> items)
+    {
+        foreach(PrecacheRecord precache_record in items)
+            Delsert(database,precache_record);
     }
     public static void Update(this Database database,PrecacheRecord precache_record)
     {

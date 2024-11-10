@@ -97,14 +97,26 @@ function create_csharp_ext(schema)
 ${[...Object.keys(schema.cells)].filter((name) => name != "hiberlite_id").map(create_param).join("\n")}
         cmd.ExecuteNonQuery();
     }
+    public static void ForceInsert(this Database database,${className} ${schema.name})
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"INSERT INTO {${className}.TABLE_NAME} (${[...Object.keys(schema.cells)].join(",")}) VALUES (${[...Object.keys(schema.cells)].map((prop) => "$" + prop).join(",")});";
+${[...Object.keys(schema.cells)].map(create_param).join("\n")}
+        cmd.ExecuteNonQuery();
+    }
     public static void Insert(this Database database,IEnumerable<${className}> items)
     {
         foreach(${className} ${schema.name} in items)
             Insert(database,${schema.name});
     }
+    public static void ForceInsert(this Database database,IEnumerable<${className}> items)
+    {
+        foreach(${className} ${schema.name} in items)
+            ForceInsert(database,${schema.name});
+    }
     public static void Upsert(this Database database,${className} ${schema.name})
     {
-        if(Exists${className}(database,${schema.name}))
+        if(Exists${className}(database,${schema.name}.HiberliteId))
         {
             Update(database,${schema.name});
             return;
@@ -115,6 +127,20 @@ ${[...Object.keys(schema.cells)].filter((name) => name != "hiberlite_id").map(cr
     {
         foreach(${className} ${schema.name} in items)
             Upsert(database,${schema.name});
+    }
+    public static void Delsert(this Database database,${className} ${schema.name})
+    {
+        if(Exists${className}(database,${schema.name}.HiberliteId))
+        {
+            Delete${className}(database,${schema.name}.HiberliteId);
+            return;
+        }
+        ForceInsert(database,${schema.name});
+    }
+    public static void Delsert(this Database database,IEnumerable<${className}> items)
+    {
+        foreach(${className} ${schema.name} in items)
+            Delsert(database,${schema.name});
     }`
     }
     function create_update()

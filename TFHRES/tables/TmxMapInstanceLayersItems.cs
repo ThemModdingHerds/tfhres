@@ -35,14 +35,35 @@ public static class TmxMapInstanceLayersItemsExt
         cmd.Parameters.AddWithValue("$item_vertex_data",tmx_map_instance_layers_items.ItemVertexData);
         cmd.ExecuteNonQuery();
     }
+    public static void ForceInsert(this Database database,TmxMapInstanceLayersItems tmx_map_instance_layers_items)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"INSERT INTO {TmxMapInstanceLayersItems.TABLE_NAME} (hiberlite_entry_indx,hiberlite_id,hiberlite_parent_id,item_depth,item_draw_layer,item_layer_id,item_layer_name,item_num_verticies,item_tileset_image_shortname,item_vertex_data) VALUES ($hiberlite_entry_indx,$hiberlite_id,$hiberlite_parent_id,$item_depth,$item_draw_layer,$item_layer_id,$item_layer_name,$item_num_verticies,$item_tileset_image_shortname,$item_vertex_data);";
+        cmd.Parameters.AddWithValue("$hiberlite_entry_indx",tmx_map_instance_layers_items.HiberliteEntryIndx);
+        cmd.Parameters.AddWithValue("$hiberlite_id",tmx_map_instance_layers_items.HiberliteId);
+        cmd.Parameters.AddWithValue("$hiberlite_parent_id",tmx_map_instance_layers_items.HiberliteParentId);
+        cmd.Parameters.AddWithValue("$item_depth",tmx_map_instance_layers_items.ItemDepth);
+        cmd.Parameters.AddWithValue("$item_draw_layer",tmx_map_instance_layers_items.ItemDrawLayer);
+        cmd.Parameters.AddWithValue("$item_layer_id",tmx_map_instance_layers_items.ItemLayerId);
+        cmd.Parameters.AddWithValue("$item_layer_name",tmx_map_instance_layers_items.ItemLayerName);
+        cmd.Parameters.AddWithValue("$item_num_verticies",tmx_map_instance_layers_items.ItemNumVerticies);
+        cmd.Parameters.AddWithValue("$item_tileset_image_shortname",tmx_map_instance_layers_items.ItemTilesetImageShortname);
+        cmd.Parameters.AddWithValue("$item_vertex_data",tmx_map_instance_layers_items.ItemVertexData);
+        cmd.ExecuteNonQuery();
+    }
     public static void Insert(this Database database,IEnumerable<TmxMapInstanceLayersItems> items)
     {
         foreach(TmxMapInstanceLayersItems tmx_map_instance_layers_items in items)
             Insert(database,tmx_map_instance_layers_items);
     }
+    public static void ForceInsert(this Database database,IEnumerable<TmxMapInstanceLayersItems> items)
+    {
+        foreach(TmxMapInstanceLayersItems tmx_map_instance_layers_items in items)
+            ForceInsert(database,tmx_map_instance_layers_items);
+    }
     public static void Upsert(this Database database,TmxMapInstanceLayersItems tmx_map_instance_layers_items)
     {
-        if(ExistsTmxMapInstanceLayersItems(database,tmx_map_instance_layers_items))
+        if(ExistsTmxMapInstanceLayersItems(database,tmx_map_instance_layers_items.HiberliteId))
         {
             Update(database,tmx_map_instance_layers_items);
             return;
@@ -53,6 +74,20 @@ public static class TmxMapInstanceLayersItemsExt
     {
         foreach(TmxMapInstanceLayersItems tmx_map_instance_layers_items in items)
             Upsert(database,tmx_map_instance_layers_items);
+    }
+    public static void Delsert(this Database database,TmxMapInstanceLayersItems tmx_map_instance_layers_items)
+    {
+        if(ExistsTmxMapInstanceLayersItems(database,tmx_map_instance_layers_items.HiberliteId))
+        {
+            DeleteTmxMapInstanceLayersItems(database,tmx_map_instance_layers_items.HiberliteId);
+            return;
+        }
+        ForceInsert(database,tmx_map_instance_layers_items);
+    }
+    public static void Delsert(this Database database,IEnumerable<TmxMapInstanceLayersItems> items)
+    {
+        foreach(TmxMapInstanceLayersItems tmx_map_instance_layers_items in items)
+            Delsert(database,tmx_map_instance_layers_items);
     }
     public static void Update(this Database database,TmxMapInstanceLayersItems tmx_map_instance_layers_items)
     {

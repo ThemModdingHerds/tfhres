@@ -29,14 +29,32 @@ public static class TmxMapInstanceLayersItemsItemAnimationsItemsExt
         cmd.Parameters.AddWithValue("$item_ticks_per_frame",tmx_map_instance_layers_items_item_animations_items.ItemTicksPerFrame);
         cmd.ExecuteNonQuery();
     }
+    public static void ForceInsert(this Database database,TmxMapInstanceLayersItemsItemAnimationsItems tmx_map_instance_layers_items_item_animations_items)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"INSERT INTO {TmxMapInstanceLayersItemsItemAnimationsItems.TABLE_NAME} (hiberlite_entry_indx,hiberlite_id,hiberlite_parent_id,item_max_frames,item_munged_frames,item_starting_vertex,item_ticks_per_frame) VALUES ($hiberlite_entry_indx,$hiberlite_id,$hiberlite_parent_id,$item_max_frames,$item_munged_frames,$item_starting_vertex,$item_ticks_per_frame);";
+        cmd.Parameters.AddWithValue("$hiberlite_entry_indx",tmx_map_instance_layers_items_item_animations_items.HiberliteEntryIndx);
+        cmd.Parameters.AddWithValue("$hiberlite_id",tmx_map_instance_layers_items_item_animations_items.HiberliteId);
+        cmd.Parameters.AddWithValue("$hiberlite_parent_id",tmx_map_instance_layers_items_item_animations_items.HiberliteParentId);
+        cmd.Parameters.AddWithValue("$item_max_frames",tmx_map_instance_layers_items_item_animations_items.ItemMaxFrames);
+        cmd.Parameters.AddWithValue("$item_munged_frames",tmx_map_instance_layers_items_item_animations_items.ItemMungedFrames);
+        cmd.Parameters.AddWithValue("$item_starting_vertex",tmx_map_instance_layers_items_item_animations_items.ItemStartingVertex);
+        cmd.Parameters.AddWithValue("$item_ticks_per_frame",tmx_map_instance_layers_items_item_animations_items.ItemTicksPerFrame);
+        cmd.ExecuteNonQuery();
+    }
     public static void Insert(this Database database,IEnumerable<TmxMapInstanceLayersItemsItemAnimationsItems> items)
     {
         foreach(TmxMapInstanceLayersItemsItemAnimationsItems tmx_map_instance_layers_items_item_animations_items in items)
             Insert(database,tmx_map_instance_layers_items_item_animations_items);
     }
+    public static void ForceInsert(this Database database,IEnumerable<TmxMapInstanceLayersItemsItemAnimationsItems> items)
+    {
+        foreach(TmxMapInstanceLayersItemsItemAnimationsItems tmx_map_instance_layers_items_item_animations_items in items)
+            ForceInsert(database,tmx_map_instance_layers_items_item_animations_items);
+    }
     public static void Upsert(this Database database,TmxMapInstanceLayersItemsItemAnimationsItems tmx_map_instance_layers_items_item_animations_items)
     {
-        if(ExistsTmxMapInstanceLayersItemsItemAnimationsItems(database,tmx_map_instance_layers_items_item_animations_items))
+        if(ExistsTmxMapInstanceLayersItemsItemAnimationsItems(database,tmx_map_instance_layers_items_item_animations_items.HiberliteId))
         {
             Update(database,tmx_map_instance_layers_items_item_animations_items);
             return;
@@ -47,6 +65,20 @@ public static class TmxMapInstanceLayersItemsItemAnimationsItemsExt
     {
         foreach(TmxMapInstanceLayersItemsItemAnimationsItems tmx_map_instance_layers_items_item_animations_items in items)
             Upsert(database,tmx_map_instance_layers_items_item_animations_items);
+    }
+    public static void Delsert(this Database database,TmxMapInstanceLayersItemsItemAnimationsItems tmx_map_instance_layers_items_item_animations_items)
+    {
+        if(ExistsTmxMapInstanceLayersItemsItemAnimationsItems(database,tmx_map_instance_layers_items_item_animations_items.HiberliteId))
+        {
+            DeleteTmxMapInstanceLayersItemsItemAnimationsItems(database,tmx_map_instance_layers_items_item_animations_items.HiberliteId);
+            return;
+        }
+        ForceInsert(database,tmx_map_instance_layers_items_item_animations_items);
+    }
+    public static void Delsert(this Database database,IEnumerable<TmxMapInstanceLayersItemsItemAnimationsItems> items)
+    {
+        foreach(TmxMapInstanceLayersItemsItemAnimationsItems tmx_map_instance_layers_items_item_animations_items in items)
+            Delsert(database,tmx_map_instance_layers_items_item_animations_items);
     }
     public static void Update(this Database database,TmxMapInstanceLayersItemsItemAnimationsItems tmx_map_instance_layers_items_item_animations_items)
     {

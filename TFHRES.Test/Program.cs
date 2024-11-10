@@ -4,18 +4,9 @@ using Microsoft.Data.Sqlite;
 using ThemModdingHerds.TFHResource;
 using ThemModdingHerds.TFHResource.Data;
 
-new Database().Save("test.tfhres",true);
-
-Database db = Database.Open("test.tfhres");
-Database db2 = new();
-
-db2.Insert(new CacheRecord()
-{
-    Shortname = "a",
-    SourcePath = "b"
-});
-
-Database both = db.Merge(db2);
-db.Close();
-db2.Close();
-both.Save("test.tfhres",true);
+string path = "G:\\SteamLibrary\\steamapps\\common\\Them's Fightin' Herds\\Scripts\\src\\Farm\\resources\\resources_prod.tfhres";
+Database database = Database.Open(path);
+Database mod = Database.Open("G:\\ThemModdingHerds\\VelvetBeautifier\\CLI\\bin\\Debug\\net8.0\\mods\\ntf.tfh.halloweenlobbies\\resources_prod.tfhres");
+Database result = database.Clone();
+result.Upsert(mod);
+result.Save("test.tfhres",true);

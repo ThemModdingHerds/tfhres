@@ -25,14 +25,30 @@ public static class VarstateExt
         cmd.Parameters.AddWithValue("$state",varstate.State);
         cmd.ExecuteNonQuery();
     }
+    public static void ForceInsert(this Database database,Varstate varstate)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"INSERT INTO {Varstate.TABLE_NAME} (biome,hiberlite_id,name,notes,state) VALUES ($biome,$hiberlite_id,$name,$notes,$state);";
+        cmd.Parameters.AddWithValue("$biome",varstate.Biome);
+        cmd.Parameters.AddWithValue("$hiberlite_id",varstate.HiberliteId);
+        cmd.Parameters.AddWithValue("$name",varstate.Name);
+        cmd.Parameters.AddWithValue("$notes",varstate.Notes);
+        cmd.Parameters.AddWithValue("$state",varstate.State);
+        cmd.ExecuteNonQuery();
+    }
     public static void Insert(this Database database,IEnumerable<Varstate> items)
     {
         foreach(Varstate varstate in items)
             Insert(database,varstate);
     }
+    public static void ForceInsert(this Database database,IEnumerable<Varstate> items)
+    {
+        foreach(Varstate varstate in items)
+            ForceInsert(database,varstate);
+    }
     public static void Upsert(this Database database,Varstate varstate)
     {
-        if(ExistsVarstate(database,varstate))
+        if(ExistsVarstate(database,varstate.HiberliteId))
         {
             Update(database,varstate);
             return;
@@ -43,6 +59,20 @@ public static class VarstateExt
     {
         foreach(Varstate varstate in items)
             Upsert(database,varstate);
+    }
+    public static void Delsert(this Database database,Varstate varstate)
+    {
+        if(ExistsVarstate(database,varstate.HiberliteId))
+        {
+            DeleteVarstate(database,varstate.HiberliteId);
+            return;
+        }
+        ForceInsert(database,varstate);
+    }
+    public static void Delsert(this Database database,IEnumerable<Varstate> items)
+    {
+        foreach(Varstate varstate in items)
+            Delsert(database,varstate);
     }
     public static void Update(this Database database,Varstate varstate)
     {

@@ -23,14 +23,29 @@ public static class JotBytecodeExt
         cmd.Parameters.AddWithValue("$shortname",jot_bytecode.Shortname);
         cmd.ExecuteNonQuery();
     }
+    public static void ForceInsert(this Database database,JotBytecode jot_bytecode)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"INSERT INTO {JotBytecode.TABLE_NAME} (bytecode,hiberlite_id,original,shortname) VALUES ($bytecode,$hiberlite_id,$original,$shortname);";
+        cmd.Parameters.AddWithValue("$bytecode",jot_bytecode.Bytecode);
+        cmd.Parameters.AddWithValue("$hiberlite_id",jot_bytecode.HiberliteId);
+        cmd.Parameters.AddWithValue("$original",jot_bytecode.Original);
+        cmd.Parameters.AddWithValue("$shortname",jot_bytecode.Shortname);
+        cmd.ExecuteNonQuery();
+    }
     public static void Insert(this Database database,IEnumerable<JotBytecode> items)
     {
         foreach(JotBytecode jot_bytecode in items)
             Insert(database,jot_bytecode);
     }
+    public static void ForceInsert(this Database database,IEnumerable<JotBytecode> items)
+    {
+        foreach(JotBytecode jot_bytecode in items)
+            ForceInsert(database,jot_bytecode);
+    }
     public static void Upsert(this Database database,JotBytecode jot_bytecode)
     {
-        if(ExistsJotBytecode(database,jot_bytecode))
+        if(ExistsJotBytecode(database,jot_bytecode.HiberliteId))
         {
             Update(database,jot_bytecode);
             return;
@@ -41,6 +56,20 @@ public static class JotBytecodeExt
     {
         foreach(JotBytecode jot_bytecode in items)
             Upsert(database,jot_bytecode);
+    }
+    public static void Delsert(this Database database,JotBytecode jot_bytecode)
+    {
+        if(ExistsJotBytecode(database,jot_bytecode.HiberliteId))
+        {
+            DeleteJotBytecode(database,jot_bytecode.HiberliteId);
+            return;
+        }
+        ForceInsert(database,jot_bytecode);
+    }
+    public static void Delsert(this Database database,IEnumerable<JotBytecode> items)
+    {
+        foreach(JotBytecode jot_bytecode in items)
+            Delsert(database,jot_bytecode);
     }
     public static void Update(this Database database,JotBytecode jot_bytecode)
     {

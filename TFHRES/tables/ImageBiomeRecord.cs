@@ -21,14 +21,28 @@ public static class ImageBiomeRecordExt
         cmd.Parameters.AddWithValue("$image_shortname",image_biome_record.ImageShortname);
         cmd.ExecuteNonQuery();
     }
+    public static void ForceInsert(this Database database,ImageBiomeRecord image_biome_record)
+    {
+        SqliteCommand cmd = database.Connection.CreateCommand();
+        cmd.CommandText = $"INSERT INTO {ImageBiomeRecord.TABLE_NAME} (biomename,hiberlite_id,image_shortname) VALUES ($biomename,$hiberlite_id,$image_shortname);";
+        cmd.Parameters.AddWithValue("$biomename",image_biome_record.Biomename);
+        cmd.Parameters.AddWithValue("$hiberlite_id",image_biome_record.HiberliteId);
+        cmd.Parameters.AddWithValue("$image_shortname",image_biome_record.ImageShortname);
+        cmd.ExecuteNonQuery();
+    }
     public static void Insert(this Database database,IEnumerable<ImageBiomeRecord> items)
     {
         foreach(ImageBiomeRecord image_biome_record in items)
             Insert(database,image_biome_record);
     }
+    public static void ForceInsert(this Database database,IEnumerable<ImageBiomeRecord> items)
+    {
+        foreach(ImageBiomeRecord image_biome_record in items)
+            ForceInsert(database,image_biome_record);
+    }
     public static void Upsert(this Database database,ImageBiomeRecord image_biome_record)
     {
-        if(ExistsImageBiomeRecord(database,image_biome_record))
+        if(ExistsImageBiomeRecord(database,image_biome_record.HiberliteId))
         {
             Update(database,image_biome_record);
             return;
@@ -39,6 +53,20 @@ public static class ImageBiomeRecordExt
     {
         foreach(ImageBiomeRecord image_biome_record in items)
             Upsert(database,image_biome_record);
+    }
+    public static void Delsert(this Database database,ImageBiomeRecord image_biome_record)
+    {
+        if(ExistsImageBiomeRecord(database,image_biome_record.HiberliteId))
+        {
+            DeleteImageBiomeRecord(database,image_biome_record.HiberliteId);
+            return;
+        }
+        ForceInsert(database,image_biome_record);
+    }
+    public static void Delsert(this Database database,IEnumerable<ImageBiomeRecord> items)
+    {
+        foreach(ImageBiomeRecord image_biome_record in items)
+            Delsert(database,image_biome_record);
     }
     public static void Update(this Database database,ImageBiomeRecord image_biome_record)
     {
