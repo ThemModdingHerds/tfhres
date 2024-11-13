@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 
 namespace ThemModdingHerds.TFHResource.JSON;
-public class Atlas(Dictionary<string,AtlasFrame> frames,AtlasMetadata metadata)
+public class Atlas(Dictionary<string,AtlasFrame> frames,AtlasMetadata metadata) : TextData
 {
     [JsonPropertyName("frames")]
     public Dictionary<string,AtlasFrame> Frames {get;set;} = frames;

@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 
 namespace ThemModdingHerds.TFHResource.JSON;
-public class World(IEnumerable<WorldMap> maps,bool onlyShowAdjacentMaps)
+public class World(IEnumerable<WorldMap> maps,bool onlyShowAdjacentMaps) : TextData
 {
     [JsonPropertyName("maps")]
     public List<WorldMap> Maps {get;set;} = [..maps];
