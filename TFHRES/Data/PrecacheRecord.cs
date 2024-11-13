@@ -1,5 +1,5 @@
 // generated code. DO NOT MODIFY (see scripts/create-table.mjs in source code)
-using System.Data;
+using System.Text.Json.Serialization;
 using Microsoft.Data.Sqlite;
 
 namespace ThemModdingHerds.TFHResource.Data;
@@ -7,9 +7,13 @@ public class PrecacheRecord
 {
     public const string TABLE_NAME = "precache_record";
     public const string CREATE_TABLE_COMMAND = "CREATE TABLE precache_record (hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, mapname TEXT, shortname TEXT, type INTEGER)";
+    [JsonPropertyName("hiberlite_id")]
     public long HiberliteId {get; set;}
+    [JsonPropertyName("mapname")]
     public string Mapname {get; set;} = string.Empty;
+    [JsonPropertyName("shortname")]
     public string Shortname {get; set;} = string.Empty;
+    [JsonPropertyName("type")]
     public long Type {get; set;}
 }
 public static class PrecacheRecordExt

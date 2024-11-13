@@ -1,5 +1,5 @@
 // generated code. DO NOT MODIFY (see scripts/create-table.mjs in source code)
-using System.Data;
+using System.Text.Json.Serialization;
 using Microsoft.Data.Sqlite;
 
 namespace ThemModdingHerds.TFHResource.Data;
@@ -7,9 +7,13 @@ public class JotBytecode
 {
     public const string TABLE_NAME = "jot_bytecode";
     public const string CREATE_TABLE_COMMAND = "CREATE TABLE jot_bytecode (bytecode TEXT, hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, original TEXT, shortname TEXT)";
+    [JsonPropertyName("bytecode")]
     public string Bytecode {get; set;} = string.Empty;
+    [JsonPropertyName("hiberlite_id")]
     public long HiberliteId {get; set;}
+    [JsonPropertyName("original")]
     public string Original {get; set;} = string.Empty;
+    [JsonPropertyName("shortname")]
     public string Shortname {get; set;} = string.Empty;
 }
 public static class JotBytecodeExt

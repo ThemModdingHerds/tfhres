@@ -1,5 +1,5 @@
 // generated code. DO NOT MODIFY (see scripts/create-table.mjs in source code)
-using System.Data;
+using System.Text.Json.Serialization;
 using Microsoft.Data.Sqlite;
 
 namespace ThemModdingHerds.TFHResource.Data;
@@ -7,9 +7,13 @@ public class FilemapRecord
 {
     public const string TABLE_NAME = "filemap_record";
     public const string CREATE_TABLE_COMMAND = "CREATE TABLE filemap_record (hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, shortname TEXT, source_path TEXT, type TEXT)";
+    [JsonPropertyName("hiberlite_id")]
     public long HiberliteId {get; set;}
+    [JsonPropertyName("shortname")]
     public string Shortname {get; set;} = string.Empty;
+    [JsonPropertyName("source_path")]
     public string SourcePath {get; set;} = string.Empty;
+    [JsonPropertyName("type")]
     public string Type {get; set;} = string.Empty;
 }
 public static class FilemapRecordExt

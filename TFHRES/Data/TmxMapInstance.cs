@@ -1,5 +1,5 @@
 // generated code. DO NOT MODIFY (see scripts/create-table.mjs in source code)
-using System.Data;
+using System.Text.Json.Serialization;
 using Microsoft.Data.Sqlite;
 
 namespace ThemModdingHerds.TFHResource.Data;
@@ -7,9 +7,13 @@ public class TmxMapInstance
 {
     public const string TABLE_NAME = "tmx_map_instance";
     public const string CREATE_TABLE_COMMAND = "CREATE TABLE tmx_map_instance (flattened_terrain_grid BLOB, hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, map_id TEXT, tmx_source_filepath TEXT)";
+    [JsonPropertyName("flattened_terrain_grid")]
     public byte[] FlattenedTerrainGrid {get; set;} = [];
+    [JsonPropertyName("hiberlite_id")]
     public long HiberliteId {get; set;}
+    [JsonPropertyName("map_id")]
     public string MapId {get; set;} = string.Empty;
+    [JsonPropertyName("tmx_source_filepath")]
     public string TmxSourceFilepath {get; set;} = string.Empty;
 }
 public static class TmxMapInstanceExt

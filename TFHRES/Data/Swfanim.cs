@@ -1,5 +1,5 @@
 // generated code. DO NOT MODIFY (see scripts/create-table.mjs in source code)
-using System.Data;
+using System.Text.Json.Serialization;
 using Microsoft.Data.Sqlite;
 
 namespace ThemModdingHerds.TFHResource.Data;
@@ -7,8 +7,11 @@ public class Swfanim
 {
     public const string TABLE_NAME = "swfanim";
     public const string CREATE_TABLE_COMMAND = "CREATE TABLE swfanim (bytes BLOB, hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, shortname TEXT)";
+    [JsonPropertyName("bytes")]
     public byte[] Bytes {get; set;} = [];
+    [JsonPropertyName("hiberlite_id")]
     public long HiberliteId {get; set;}
+    [JsonPropertyName("shortname")]
     public string Shortname {get; set;} = string.Empty;
 }
 public static class SwfanimExt

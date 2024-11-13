@@ -16,4 +16,4 @@ export function convert_name(name)
 }
 
 export const TFHRESOURCE_FOLDER = resolve(__dirname,"..","TFHRES")
-export const THFRESOURCE_DATA_FOLDER = resolve(TFHRESOURCE_FOLDER,"tables")
+export const THFRESOURCE_DATA_FOLDER = resolve(TFHRESOURCE_FOLDER,"Data")

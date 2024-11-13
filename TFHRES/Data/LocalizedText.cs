@@ -1,5 +1,5 @@
 // generated code. DO NOT MODIFY (see scripts/create-table.mjs in source code)
-using System.Data;
+using System.Text.Json.Serialization;
 using Microsoft.Data.Sqlite;
 
 namespace ThemModdingHerds.TFHResource.Data;
@@ -7,10 +7,15 @@ public class LocalizedText
 {
     public const string TABLE_NAME = "localized_text";
     public const string CREATE_TABLE_COMMAND = "CREATE TABLE localized_text (hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, langcode TEXT, storyfile_dbname TEXT, tag TEXT, text TEXT)";
+    [JsonPropertyName("hiberlite_id")]
     public long HiberliteId {get; set;}
+    [JsonPropertyName("langcode")]
     public string Langcode {get; set;} = string.Empty;
+    [JsonPropertyName("storyfile_dbname")]
     public string StoryfileDbname {get; set;} = string.Empty;
+    [JsonPropertyName("tag")]
     public string Tag {get; set;} = string.Empty;
+    [JsonPropertyName("text")]
     public string Text {get; set;} = string.Empty;
 }
 public static class LocalizedTextExt

@@ -1,5 +1,5 @@
 // generated code. DO NOT MODIFY (see scripts/create-table.mjs in source code)
-using System.Data;
+using System.Text.Json.Serialization;
 using Microsoft.Data.Sqlite;
 
 namespace ThemModdingHerds.TFHResource.Data;
@@ -7,9 +7,13 @@ public class CachedTextfile
 {
     public const string TABLE_NAME = "cached_textfile";
     public const string CREATE_TABLE_COMMAND = "CREATE TABLE cached_textfile (hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, shortname TEXT, source_file TEXT, text_data BLOB)";
+    [JsonPropertyName("hiberlite_id")]
     public long HiberliteId {get; set;}
+    [JsonPropertyName("shortname")]
     public string Shortname {get; set;} = string.Empty;
+    [JsonPropertyName("source_file")]
     public string SourceFile {get; set;} = string.Empty;
+    [JsonPropertyName("text_data")]
     public byte[] TextData {get; set;} = [];
 }
 public static class CachedTextfileExt

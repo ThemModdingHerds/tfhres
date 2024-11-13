@@ -1,5 +1,5 @@
 // generated code. DO NOT MODIFY (see scripts/create-table.mjs in source code)
-using System.Data;
+using System.Text.Json.Serialization;
 using Microsoft.Data.Sqlite;
 
 namespace ThemModdingHerds.TFHResource.Data;
@@ -7,8 +7,11 @@ public class MapBiomeRecord
 {
     public const string TABLE_NAME = "map_biome_record";
     public const string CREATE_TABLE_COMMAND = "CREATE TABLE map_biome_record (biomename TEXT, hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, map_shortname TEXT)";
+    [JsonPropertyName("biomename")]
     public string Biomename {get; set;} = string.Empty;
+    [JsonPropertyName("hiberlite_id")]
     public long HiberliteId {get; set;}
+    [JsonPropertyName("map_shortname")]
     public string MapShortname {get; set;} = string.Empty;
 }
 public static class MapBiomeRecordExt

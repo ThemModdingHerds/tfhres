@@ -1,5 +1,5 @@
 // generated code. DO NOT MODIFY (see scripts/create-table.mjs in source code)
-using System.Data;
+using System.Text.Json.Serialization;
 using Microsoft.Data.Sqlite;
 
 namespace ThemModdingHerds.TFHResource.Data;
@@ -7,12 +7,19 @@ public class TmxMapInstanceLayersItemsItemAnimationsItems
 {
     public const string TABLE_NAME = "tmx_map_instance_layers_items_item_animations_items";
     public const string CREATE_TABLE_COMMAND = "CREATE TABLE tmx_map_instance_layers_items_item_animations_items (hiberlite_entry_indx INTEGER, hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, hiberlite_parent_id INTEGER, item_max_frames INTEGER, item_munged_frames BLOB, item_starting_vertex INTEGER, item_ticks_per_frame INTEGER)";
+    [JsonPropertyName("hiberlite_entry_indx")]
     public long HiberliteEntryIndx {get; set;}
+    [JsonPropertyName("hiberlite_id")]
     public long HiberliteId {get; set;}
+    [JsonPropertyName("hiberlite_parent_id")]
     public long HiberliteParentId {get; set;}
+    [JsonPropertyName("item_max_frames")]
     public long ItemMaxFrames {get; set;}
+    [JsonPropertyName("item_munged_frames")]
     public byte[] ItemMungedFrames {get; set;} = [];
+    [JsonPropertyName("item_starting_vertex")]
     public long ItemStartingVertex {get; set;}
+    [JsonPropertyName("item_ticks_per_frame")]
     public long ItemTicksPerFrame {get; set;}
 }
 public static class TmxMapInstanceLayersItemsItemAnimationsItemsExt

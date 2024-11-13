@@ -26,10 +26,4 @@ public static class SqliteExt
         command.CommandText = $"SELECT name FROM sqlite_master WHERE type='index' AND name='{name}';";
         return command.ExecuteScalar() != null;
     }
-    public static SqliteConnection Clone(this SqliteConnection connection)
-    {
-        SqliteConnection clone = new();
-        connection.BackupDatabase(clone);
-        return clone;
-    }
 }

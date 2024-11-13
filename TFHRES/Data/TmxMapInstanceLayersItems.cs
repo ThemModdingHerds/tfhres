@@ -1,5 +1,5 @@
 // generated code. DO NOT MODIFY (see scripts/create-table.mjs in source code)
-using System.Data;
+using System.Text.Json.Serialization;
 using Microsoft.Data.Sqlite;
 
 namespace ThemModdingHerds.TFHResource.Data;
@@ -7,15 +7,25 @@ public class TmxMapInstanceLayersItems
 {
     public const string TABLE_NAME = "tmx_map_instance_layers_items";
     public const string CREATE_TABLE_COMMAND = "CREATE TABLE tmx_map_instance_layers_items (hiberlite_entry_indx INTEGER, hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, hiberlite_parent_id INTEGER, item_depth INTEGER, item_draw_layer INTEGER, item_layer_id TEXT, item_layer_name TEXT, item_num_verticies INTEGER, item_tileset_image_shortname TEXT, item_vertex_data BLOB)";
+    [JsonPropertyName("hiberlite_entry_indx")]
     public long HiberliteEntryIndx {get; set;}
+    [JsonPropertyName("hiberlite_id")]
     public long HiberliteId {get; set;}
+    [JsonPropertyName("hiberlite_parent_id")]
     public long HiberliteParentId {get; set;}
+    [JsonPropertyName("item_depth")]
     public long ItemDepth {get; set;}
+    [JsonPropertyName("item_draw_layer")]
     public long ItemDrawLayer {get; set;}
+    [JsonPropertyName("item_layer_id")]
     public string ItemLayerId {get; set;} = string.Empty;
+    [JsonPropertyName("item_layer_name")]
     public string ItemLayerName {get; set;} = string.Empty;
+    [JsonPropertyName("item_num_verticies")]
     public long ItemNumVerticies {get; set;}
+    [JsonPropertyName("item_tileset_image_shortname")]
     public string ItemTilesetImageShortname {get; set;} = string.Empty;
+    [JsonPropertyName("item_vertex_data")]
     public byte[] ItemVertexData {get; set;} = [];
 }
 public static class TmxMapInstanceLayersItemsExt

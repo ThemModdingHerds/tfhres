@@ -33,13 +33,13 @@ function get_reader_method(type,name)
  */
 function create_property(name,type)
 {
-    let prop = `public ${get_type(type)} ${convert_name(name)} {get; set;}`
+    let prop = `[JsonPropertyName("${name}")]\n    public ${get_type(type)} ${convert_name(name)} {get; set;}`
     if(default_value_map[type])
         prop += ` = ${get_default_value(type)};`
     return prop
 }
 
-const CSHARP_HEADER = "using System.Data;\nusing Microsoft.Data.Sqlite;\n\nnamespace ThemModdingHerds.TFHResource.Data;"
+const CSHARP_HEADER = "using System.Text.Json.Serialization;\nusing Microsoft.Data.Sqlite;\n\nnamespace ThemModdingHerds.TFHResource.Data;"
 
 /**
  * 

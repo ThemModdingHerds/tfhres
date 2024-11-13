@@ -1,5 +1,5 @@
 // generated code. DO NOT MODIFY (see scripts/create-table.mjs in source code)
-using System.Data;
+using System.Text.Json.Serialization;
 using Microsoft.Data.Sqlite;
 
 namespace ThemModdingHerds.TFHResource.Data;
@@ -7,11 +7,17 @@ public class Pixelanim
 {
     public const string TABLE_NAME = "pixelanim";
     public const string CREATE_TABLE_COMMAND = "CREATE TABLE pixelanim (animtype INTEGER, atlas_shortname TEXT, compressed_frame_hiberlite_ids BLOB, hiberlite_id INTEGER, shortname TEXT, ticks_per_frame INTEGER)";
+    [JsonPropertyName("animtype")]
     public long Animtype {get; set;}
+    [JsonPropertyName("atlas_shortname")]
     public string AtlasShortname {get; set;} = string.Empty;
+    [JsonPropertyName("compressed_frame_hiberlite_ids")]
     public byte[] CompressedFrameHiberliteIds {get; set;} = [];
+    [JsonPropertyName("hiberlite_id")]
     public long HiberliteId {get; set;}
+    [JsonPropertyName("shortname")]
     public string Shortname {get; set;} = string.Empty;
+    [JsonPropertyName("ticks_per_frame")]
     public long TicksPerFrame {get; set;}
 }
 public static class PixelanimExt

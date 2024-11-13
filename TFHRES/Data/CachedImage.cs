@@ -1,5 +1,5 @@
 // generated code. DO NOT MODIFY (see scripts/create-table.mjs in source code)
-using System.Data;
+using System.Text.Json.Serialization;
 using Microsoft.Data.Sqlite;
 
 namespace ThemModdingHerds.TFHResource.Data;
@@ -7,12 +7,19 @@ public class CachedImage
 {
     public const string TABLE_NAME = "cached_image";
     public const string CREATE_TABLE_COMMAND = "CREATE TABLE cached_image (height INTEGER, hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, image_data BLOB, is_compressed INTEGER, shortname TEXT, vram_only INTEGER, width INTEGER)";
+    [JsonPropertyName("height")]
     public long Height {get; set;}
+    [JsonPropertyName("hiberlite_id")]
     public long HiberliteId {get; set;}
+    [JsonPropertyName("image_data")]
     public byte[] ImageData {get; set;} = [];
+    [JsonPropertyName("is_compressed")]
     public long IsCompressed {get; set;}
+    [JsonPropertyName("shortname")]
     public string Shortname {get; set;} = string.Empty;
+    [JsonPropertyName("vram_only")]
     public long VramOnly {get; set;}
+    [JsonPropertyName("width")]
     public long Width {get; set;}
 }
 public static class CachedImageExt

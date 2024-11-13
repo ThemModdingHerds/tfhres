@@ -1,5 +1,5 @@
 // generated code. DO NOT MODIFY (see scripts/create-table.mjs in source code)
-using System.Data;
+using System.Text.Json.Serialization;
 using Microsoft.Data.Sqlite;
 
 namespace ThemModdingHerds.TFHResource.Data;
@@ -7,10 +7,15 @@ public class Varstate
 {
     public const string TABLE_NAME = "varstate";
     public const string CREATE_TABLE_COMMAND = "CREATE TABLE varstate (biome TEXT, hiberlite_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, notes TEXT, state TEXT)";
+    [JsonPropertyName("biome")]
     public string Biome {get; set;} = string.Empty;
+    [JsonPropertyName("hiberlite_id")]
     public long HiberliteId {get; set;}
+    [JsonPropertyName("name")]
     public string Name {get; set;} = string.Empty;
+    [JsonPropertyName("notes")]
     public string Notes {get; set;} = string.Empty;
+    [JsonPropertyName("state")]
     public string State {get; set;} = string.Empty;
 }
 public static class VarstateExt
