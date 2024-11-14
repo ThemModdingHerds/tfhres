@@ -15,5 +15,7 @@ export function convert_name(name)
         .join("")
 }
 
+export const T = (/** @type {number} */ a) => " ".repeat(a)
+
 export const TFHRESOURCE_FOLDER = resolve(__dirname,"..","TFHRES")
 export const THFRESOURCE_DATA_FOLDER = resolve(TFHRESOURCE_FOLDER,"Data")

@@ -25,12 +25,12 @@ export function get_type(type)
 }
 
 /**
- * @type {{"TEXT": "string.Empty","BLOB": "[]","INTEGER": ""}}
+ * @type {{"TEXT": "string.Empty","BLOB": "[]","INTEGER": undefined}}
  */
 export const default_value_map = {
     "TEXT": "string.Empty",
     "BLOB": "[]",
-    "INTEGER": ""
+    "INTEGER": undefined
 }
 
 /**

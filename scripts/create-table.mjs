@@ -1,6 +1,6 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs"
 import { resolve } from "node:path"
-import { schemas, Schema } from "./schemas.mjs"
+import { schemas, Schema, SchemaCell } from "./schemas.mjs"
 import { THFRESOURCE_DATA_FOLDER, convert_name } from "./utils.mjs"
 import { get_type, default_value_map, get_default_value, SchemaType } from "./sql.mjs"
 
@@ -28,15 +28,18 @@ function get_reader_method(type,name)
 
 /**
  * 
- * @param {string} name 
- * @param {SchemaType} type 
+ * @param {SchemaCell} cell
  */
-function create_property(name,type)
+function create_property(cell)
 {
-    let prop = `[JsonPropertyName("${name}")]\n    public ${get_type(type)} ${convert_name(name)} {get; set;}`
-    if(default_value_map[type])
-        prop += ` = ${get_default_value(type)};`
-    return prop
+    const attributes = cell.attributes.map((attr) => `[${attr}]`)
+    let prop = `public ${get_type(cell.type)} ${convert_name(cell.name)} {get; set;}`
+    if(default_value_map[cell.type])
+        prop += ` = ${get_default_value(cell.type)};`
+    return [
+        ...attributes,
+        prop
+    ].join("\n    ")
 }
 
 const CSHARP_HEADER = "using System.Text.Json.Serialization;\nusing Microsoft.Data.Sqlite;\n\nnamespace ThemModdingHerds.TFHResource.Data;"
@@ -58,8 +61,8 @@ function create_create_command(schema)
 function create_csharp_class(schema)
 {
     const properties = []
-    for(const [name,cell] of Object.entries(schema.cells))
-        properties.push(create_property(name,cell.type))
+    for(const cell of Object.values(schema.cells))
+        properties.push(create_property(cell))
     return `public class ${convert_name(schema.name)}
 {
     public const string TABLE_NAME = "${schema.name}";
